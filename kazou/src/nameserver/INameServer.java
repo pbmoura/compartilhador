@@ -1,4 +1,4 @@
-package kazou.nameserver;
+package nameserver;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

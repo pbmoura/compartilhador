@@ -1,4 +1,4 @@
-package kazou.gui;
+package gui;
 
 import java.awt.BorderLayout;
 
@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import kazou.util.Constants;
+import util.Constants;
 
 public class SplashScreen extends Screen {
 

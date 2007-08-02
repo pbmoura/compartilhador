@@ -1,6 +1,6 @@
-package kazou.gui;
+package gui;
 
-import kazou.util.Constants;
+import util.Constants;
 
 public class ScreenFactory {
 

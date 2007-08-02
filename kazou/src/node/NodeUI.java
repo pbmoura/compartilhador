@@ -1,4 +1,4 @@
-package kazou.node;
+package node;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -10,8 +10,8 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import kazou.nameserver.INameServer;
-import kazou.supernode.ISuperNode;
+import nameserver.INameServer;
+import supernode.ISuperNode;
 
 public class NodeUI implements Runnable {
 	private String name;

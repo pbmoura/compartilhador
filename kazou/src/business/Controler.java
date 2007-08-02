@@ -1,6 +1,6 @@
-package kazou.business;
+package business;
 
-import java.util.*;
+import java.util.Vector;
 
 public class Controler {
 

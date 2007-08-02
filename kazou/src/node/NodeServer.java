@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package kazou.node;
+package node;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,4 +1,4 @@
-package kazou.supernode;
+package supernode;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
