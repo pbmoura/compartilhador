@@ -1,4 +1,4 @@
-package kazou.gui;
+package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,8 +12,8 @@ import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 
-import kazou.business.Controler;
-import kazou.util.Constants;
+import business.Controler;
+import util.Constants;
 
 public class SearchScreen extends Screen implements ActionListener {
 

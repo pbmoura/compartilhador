@@ -1,4 +1,4 @@
-package kazou.gui;
+package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -9,8 +9,8 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
-import kazou.business.Controler;
-import kazou.util.Constants;
+import business.Controler;
+import util.Constants;
 
 public class MainFrame extends JFrame {
 

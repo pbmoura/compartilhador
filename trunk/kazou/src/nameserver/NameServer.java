@@ -1,4 +1,4 @@
-package kazou.nameserver;
+package nameserver;
 
 import java.util.*;
 import java.rmi.Naming;

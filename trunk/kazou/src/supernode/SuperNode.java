@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package kazou.supernode;
+package supernode;
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
@@ -15,8 +15,8 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import kazou.nameserver.INameServer;
-import kazou.node.Node;
+import nameserver.INameServer;
+import node.Node;
 
 
 /**

@@ -1,4 +1,4 @@
-package kazou.gui;
+package gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,8 +6,8 @@ import java.awt.event.*;
 
 import java.util.*; 
 
-import kazou.util.*;
-import kazou.business.*;
+import util.*;
+import business.*;
 
 
 

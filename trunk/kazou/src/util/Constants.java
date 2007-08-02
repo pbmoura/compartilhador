@@ -1,4 +1,4 @@
-package kazou.util;
+package util;
 
 public interface Constants {
 

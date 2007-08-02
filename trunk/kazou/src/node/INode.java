@@ -1,4 +1,4 @@
-package kazou.node;
+package node;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
