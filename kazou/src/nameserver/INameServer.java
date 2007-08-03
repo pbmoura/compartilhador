@@ -10,7 +10,7 @@ public interface INameServer extends Remote{
 	//Retorna o endereço do proximo super no para busca
 	public Vector getSuperNodes() throws RemoteException;
 	//Cadastro de super no
-	public void setSuperNode(String address) throws RemoteException;
+	public void addSuperNode(String address) throws RemoteException;
 	//descadastra um super no
 	public void disconnect(String name) throws RemoteException;
 	

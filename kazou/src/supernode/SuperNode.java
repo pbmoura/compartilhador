@@ -16,6 +16,8 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import nameserver.INameServer;
+import nameserver.NameServer;
+import node.INodeUI;
 import node.Node;
 
 
@@ -29,11 +31,15 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	private String name;
 	private Hashtable nodes;
 	private Node n;
+	private NameServer server;
 	private INameServer nameserver;
+	private Vector runningSearchs;
 	public SuperNode (String name,String nameserveradd, String repository) throws RemoteException {
 		super();
 		this.name = name;
 		nodes = new Hashtable();
+		server = new NameServer(name);
+		runningSearchs = new Vector();
 		init(nameserveradd);
 		n = new Node(name,nameserveradd, repository);
 	}
@@ -43,11 +49,12 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
             System.setSecurityManager(new RMISecurityManager());
         }
 		try {
+			server.init();
     		String ServerName = "//"+nserver+"/nameserver";
     		nameserver = (INameServer) Naming.lookup(ServerName);
     		System.err.println("Entrando...");
     		String objname = "//"+this.name+"/supernode";
-    		nameserver.setSuperNode(this.name);
+    		nameserver.addSuperNode(this.name);
     		Naming.rebind(objname,this);
     		System.err.println("SuperNode pronto...");
     	} catch (java.rmi.ConnectException ce) {
@@ -104,14 +111,35 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 		}
 	}
 
+	private INodeUI getNodeUI(String name) {
+		String Name = "//"+name+"/nodeui";
+		try {
+			return (INodeUI) Naming.lookup(Name);
+		} catch (Exception e) {
+			System.err.println("Erro recuperando NodeUI: " + e.getMessage());
+		}
+		
+		
+		return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see supernode.ISuperNode#searchFile(java.lang.String)
 	 */
-	public Vector searchFile(String file) throws RemoteException {
-		Vector v = nameserver.getSuperNodes();
+	public Vector searchFile(String file, String name) throws RemoteException {
+		//se a busca já foi feita neste supernó
+		if (runningSearchs.contains(name))
+			return null;
+		
+		runningSearchs.add(name);
+		
+		//Vector v = nameserver.getSuperNodes();
+		Vector v = server.getSuperNodes();
 		Vector machines = new Vector();
+		
 		if ((Vector)nodes.get(file)!=null) {
-			machines.addAll((Vector)nodes.get(file));
+			//machines.addAll((Vector)nodes.get(file));
+			getNodeUI(name).addMachines((Vector)nodes.get(file));
 		}
 		for (int i=0;i<v.size();i++) {
 			String address = (String)v.get(i);
@@ -122,11 +150,15 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 					System.out.println("SN não eh nulo: "+address);
 					Collection c = sn.getVector(file);
 					if (c!=null) {
-						machines.addAll(c);
+						//machines.addAll(c);
+						getNodeUI(name).addMachines((Vector)c);
 					}
 				}
 			}
 		}
+		
+		
+		runningSearchs.remove(name);
 		return machines;
 	}
 	

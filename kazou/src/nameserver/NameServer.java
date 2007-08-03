@@ -24,6 +24,17 @@ public class NameServer extends UnicastRemoteObject implements INameServer {
 		return (String) supernodes.get(r);
 	}
 	
+	public void init() {
+		String objname = "//"+name+"/nameserver";
+		try {
+			Naming.rebind(objname, this);
+			System.err.println("Servidor de nomes pronto...");
+		} catch(Exception e) {
+			System.err.println("Erro inicializando servidor: " + e.getMessage());
+		}
+		
+	}
+	
 	//Retorna um vetor com todos os supernos
 	public Vector getSuperNodes() throws RemoteException{
 		if (!supernodes.isEmpty()) {
@@ -32,7 +43,7 @@ public class NameServer extends UnicastRemoteObject implements INameServer {
 		return null;
 	}
 	//Cadastro de super no
-	public void setSuperNode(String address) throws RemoteException{
+	public void addSuperNode(String address) throws RemoteException{
 		supernodes.add(address);
 		System.out.println(supernodes);
 	}
@@ -42,10 +53,8 @@ public class NameServer extends UnicastRemoteObject implements INameServer {
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new RMISecurityManager());
 	    } 
-		NameServer s = new NameServer("servidor de nomes");
-		String objname = "//"+args[0]+"/nameserver";
-		Naming.rebind(objname, s);
-		System.err.println("Servidor de nomes pronto...");
+		NameServer s = new NameServer(args[0]);
+		s.init();
 	}
 
 	/* (non-Javadoc)
