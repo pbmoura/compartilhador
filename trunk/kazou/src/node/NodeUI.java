@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -13,20 +14,37 @@ import javax.swing.JOptionPane;
 import nameserver.INameServer;
 import supernode.ISuperNode;
 
-public class NodeUI implements Runnable {
+public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	private String name;
 	private INameServer nameserver;
 	private ISuperNode supernode;
 	private INode node;
 	private String nsname;
 	private String repository;
+	private Vector machines;
 	File folder;
 	
-	public NodeUI(String name, String ns, String repository) {
+	public NodeUI(String name, String ns, String repository) throws RemoteException {
 		super();
 		this.name = name;
 		this.nsname = ns;
 		this.repository = repository;
+		this.machines = new Vector();
+		init();
+	}
+	
+	private void init() {
+		if (System.getSecurityManager() == null) {
+			System.setSecurityManager(new RMISecurityManager());
+	    } 
+		//NodeServer s = new NodeServer();
+		String objname = "//"+this.name+"/nodeui";
+		try {
+			Naming.rebind(objname, this);
+			System.err.println("interface pronta");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void run() {
@@ -37,6 +55,14 @@ public class NodeUI implements Runnable {
 		System.out.println("dependo do superno: "+sn);
 		insertClient();
 		searchFile();
+	}
+	
+	public synchronized void addMachines(Vector v) {
+		machines.addAll(v);
+	}
+	
+	public void finish() {
+		
 	}
 	
 	private void insertClient() {
@@ -65,11 +91,12 @@ public class NodeUI implements Runnable {
 				disconnect();
 				System.exit(0);
 			} 
-			Vector v = getAddressVector(str);
-			if (v!=null && !v.isEmpty()) {
-				System.out.println(v);
+			machines.clear();
+			getAddressVector(str);
+			if (machines!=null && !machines.isEmpty()) {
+				System.out.println(machines);
 				int choice = IO.readInt();
-				connectNode((String)v.get(choice));
+				connectNode((String)machines.get(choice));
 				try {
 					String file = node.getFile(str);
 					writeFile(str, file);
@@ -97,7 +124,7 @@ public class NodeUI implements Runnable {
 	private Vector getAddressVector (String file) {
 		Vector v = null;
 		try {
-			v = supernode.searchFile(file);
+			v = supernode.searchFile(file, name);
 			
 		} catch (RemoteException re) {
 			re.printStackTrace();

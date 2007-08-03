@@ -21,11 +21,11 @@ public class Node {
 		this.name = name;
 		try {
 			ns = new NodeServer(name, repository);
+			nui = new NodeUI(name,nameserver, repository);
 			//new Thread(ns).start();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		nui = new NodeUI(name,nameserver, repository);
 		new Thread(nui).start();		
 	}
 	
