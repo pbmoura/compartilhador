@@ -1,9 +1,27 @@
 package business;
 
+import gui.MainFrame;
+
 import java.util.Vector;
 
-public class Controler {
+import util.Constants;
 
+public class Controler {
+	
+	public static void main(String args[]){
+		//TODO:check the place of this main()
+		init();		
+	}
+	public static void init(){
+		//TODO: initialize communications
+		initGUI();	
+	}
+
+	public static void initGUI(){
+		MainFrame frame = new MainFrame();
+		frame.showScreen(Constants.SPLASH_SCREEN);	
+	}
+	
 	public static Vector getSuperNodeList() {
 		// TODO Auto-generated method stub
 		Vector v = new Vector();
@@ -13,7 +31,7 @@ public class Controler {
 	}
 	
 	public static void exit(int status){
-		//TODO: implemtent connections closing
+		//TODO: implement connections closing
 		System.exit(0);
 	}
 
@@ -31,5 +49,7 @@ public class Controler {
 		// TODO Auto-generated method stub
 		
 	}
+	
+
 
 }
