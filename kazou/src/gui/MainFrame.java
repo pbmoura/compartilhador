@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -49,13 +48,6 @@ public class MainFrame extends JFrame {
 
 	public int getOldScreenID() {
 		return oldScreenID;
-	}
-	
-	/*FOR TESTS ONLY. MAYBE THIS METHOD MUST BE IN THE CONTROLLER*/
-	public static void main(String args[]){
-		
-		MainFrame frame = new MainFrame();
-		frame.showScreen(Constants.SPLASH_SCREEN);
 	}
 
 }
