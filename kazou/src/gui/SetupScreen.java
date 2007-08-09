@@ -87,7 +87,7 @@ public class SetupScreen extends Screen implements ActionListener{
 			if (text != null && text.trim().length()!=0){
 				//Configure user and goto search screen
 				Controler.configureUser(tfRepAddress.getText(),(String)cbChooseSupernode.getSelectedItem());
-				getOwner().showScreen(Constants.SEARCH_SCREEN);
+				getOwner().showScreen(Constants.MANAGEMENT_SCREEN);
 			}else{
 				//mandatory field not filled
 				JOptionPane.showMessageDialog(null,Constants.FIELD_NOT_FILLED_LABEL,Constants.WARNING_LABEL,JOptionPane.WARNING_MESSAGE);
