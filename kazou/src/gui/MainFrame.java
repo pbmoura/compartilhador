@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
 		this.getContentPane().add(screen,BorderLayout.CENTER);
 		
 		//Show screen centralized, with correct size
-		screen.setupSize();		
+		pack();
 		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((screenDimension.width-this.getSize().width)/2,    
 				(screenDimension.height-this.getSize().height)/2);
