@@ -14,11 +14,8 @@ public class ScreenFactory {
 		case Constants.SETUP_SCREEN:
 			instance = SetupScreen.getInstance(frame);
 			break;
-		case Constants.SEARCH_SCREEN:
-			instance = SearchScreen.getInstance(frame);
-			break;
-		case Constants.TRANSFER_SCREEN:
-			instance = TransferScreen.getInstance(frame);
+		case Constants.MANAGEMENT_SCREEN:
+			instance = ManagementScreen.getInstance(frame);
 			break;
 		default:
 			instance = SetupScreen.getInstance(frame);

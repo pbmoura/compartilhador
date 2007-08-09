@@ -21,8 +21,9 @@ public interface Constants {
 	/* Screen IDs */
 	public static final int SPLASH_SCREEN=-1;
 	public static final int SETUP_SCREEN=0;
-	public static final int SEARCH_SCREEN=1;
-	public static final int TRANSFER_SCREEN=2;
+	public static final int MANAGEMENT_SCREEN=1;
+//	public static final int SEARCH_SCREEN=1;
+//	public static final int TRANSFER_SCREEN=2;
 	
 	/* General screen labels */
 	public static final String OK_LABEL = "OK";
@@ -38,6 +39,8 @@ public interface Constants {
 	public static final String SETUP_SCREEN_SUPERNODE_LABEL= "Supernós";
 	public static final String SETUP_SCREEN_BROWSE_LABEL = "Escolher";
 	public static final String SETUP_SCREEN_CANCEL_LABEL = "Cancel";
+	
+	public static final String MANAGEMENT_SCREEN_TITLE = "U Share";
 	
 	public static final String SEARCH_SCREEN_TITLE = "Busca de arquivos";
 	public static final String SEARCH_SCREEN_SEARCH_LABEL= "Consulta";
