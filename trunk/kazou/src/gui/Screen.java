@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import util.Constants;
+
 public abstract class Screen extends JPanel {
 
 	private MainFrame frame;
@@ -17,7 +19,8 @@ public abstract class Screen extends JPanel {
 	
 	public Screen(MainFrame fr){
 		super();	
-		frame = fr;			
+		frame = fr;	
+		setupSize();
 	}	
 	
 	protected MainFrame getOwner(){

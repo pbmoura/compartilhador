@@ -28,14 +28,16 @@ public class ManagementScreen extends Screen {
 
 	
 	public void reset() {
-		// TODO Auto-generated method stub
+		SetupScreen.getInstance(getOwner()).reset();
+		TransferScreen.getInstance(getOwner()).reset();
+		SetupScreen.getInstance(getOwner()).reset();
 
 	}
 
 	
 	public void setupSize() {
-		// TODO Auto-generated method stub
-
+		//Do anything: preferred size is decided by its tabs
+		
 	}
 
 }

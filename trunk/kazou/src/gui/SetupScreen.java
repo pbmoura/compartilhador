@@ -123,7 +123,7 @@ public class SetupScreen extends Screen implements ActionListener{
 	}
 	
 	public void setupSize(){
-		getOwner().setSize(Constants.SETUP_SCREEN_WIDTH, Constants.SETUP_SCREEN_HEIGHT);
+		setPreferredSize(new Dimension(Constants.SETUP_SCREEN_WIDTH, Constants.SETUP_SCREEN_HEIGHT));
 	}
 	
 

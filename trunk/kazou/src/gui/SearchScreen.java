@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,8 +13,8 @@ import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 
-import business.Controler;
 import util.Constants;
+import business.Controler;
 
 public class SearchScreen extends Screen implements ActionListener {
 
@@ -85,8 +86,7 @@ public class SearchScreen extends Screen implements ActionListener {
 
 	
 	public void setupSize() {
-		getOwner().setSize(Constants.SEARCH_SCREEN_WIDTH, Constants.SEARCH_SCREEN_HEIGHT);
-		
+		setPreferredSize(new Dimension(Constants.SEARCH_SCREEN_WIDTH, Constants.SEARCH_SCREEN_HEIGHT));
 	}
 	
 	class JListDoubleClickListener extends MouseAdapter{
