@@ -1,7 +1,10 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import util.Constants;
 
 public class TransferScreen extends Screen implements ActionListener {
 
@@ -19,8 +22,7 @@ public class TransferScreen extends Screen implements ActionListener {
 	}
 	
 	public String getTitle() {
-		// TODO Auto-generated method stub
-		return null;
+		return Constants.TRANSFER_SCREEN_TITLE;
 	}
 
 	
@@ -31,7 +33,8 @@ public class TransferScreen extends Screen implements ActionListener {
 
 	
 	public void setupSize() {
-		// TODO Auto-generated method stub
+		setPreferredSize(new Dimension(Constants.TRANSFER_SCREEN_WIDTH,
+				Constants.TRANSFER_SCREEN_HEIGHT));
 
 	}
 
