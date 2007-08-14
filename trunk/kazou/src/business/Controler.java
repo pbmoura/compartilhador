@@ -42,10 +42,19 @@ public class Controler {
 
 	public static String getUserRepositoryPath() {
 		// TODO Auto-generated method stub
-		return null;
+		return "C:\\Windows\\";
 	}
 
-	public static void searchFile(String fileName) {
+	public static Vector searchFile(String fileName) {
+		// TODO Auto-generated method stub
+		Vector v = new Vector();
+		v.add("resultado stub 1");
+		v.add("resultado stub 2");
+		v.add("resultado stub 3");
+		return v;
+		
+	}
+	public static void startDownload() {
 		// TODO Auto-generated method stub
 		
 	}

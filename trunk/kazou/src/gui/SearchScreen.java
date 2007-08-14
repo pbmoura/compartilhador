@@ -1,17 +1,23 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 
 import util.Constants;
 import business.Controler;
@@ -22,6 +28,8 @@ public class SearchScreen extends Screen implements ActionListener {
 	private JTextField tfSearch ;
 	private JButton btSearch;
 	private JList lSearch ;
+	private JTable tbSearch;
+
 	
 	public static SearchScreen getInstance(MainFrame frame){
 		if (instance == null){
@@ -42,7 +50,14 @@ public class SearchScreen extends Screen implements ActionListener {
 		DefaultListModel lmSearch =new DefaultListModel();
 		
 		lSearch  = new JList(lmSearch);
-		 
+		
+		DefaultTableModel tbModel = new DefaultTableModel(10,3);
+		tbModel.setColumnIdentifiers(Constants.SEARCH_TABLE_HEADER);
+		tbSearch = new JTable(tbModel);
+		tbSearch.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tbSearch.setShowGrid(false);
+		JScrollPane tbScroll = new JScrollPane(tbSearch);
+		
 		//Handle events
 		btSearch.addActionListener(this);
 		lSearch.addMouseListener(new JListDoubleClickListener());
@@ -52,7 +67,9 @@ public class SearchScreen extends Screen implements ActionListener {
 		addComponentToGridBag(tfSearch, 1, 1, 2, 1);
 		addComponentToGridBag(btSearch, 3, 1, 1, 1);
 		
-		addComponentToGridBag(lSearch, 0, 2, 4, 2);
+		addComponentToGridBag(tbSearch, 0, 2, 4, 2);
+//		addComponentToGridBag(tbScroll, 0, 2, 4, 2);
+//		addComponentToGridBag(lSearch, 0, 2, 4, 2);
 		
 	}
 	
@@ -73,10 +90,11 @@ public class SearchScreen extends Screen implements ActionListener {
 		if(source == btSearch){
 			String text=tfSearch.getText();
 			if (text !=null && text.length()!=0){
-				Controler.searchFile(text);
+				Vector results = Controler.searchFile(text);
 				DefaultListModel lmSearch =new DefaultListModel();
-				lmSearch.addElement("Resultado Stub");
-				lmSearch.addElement("Mais Resultado Stub");
+				for(int i=0;i<results.size();i++){
+				lmSearch.addElement((String)results.get(i));
+				}
 				lSearch.setModel(lmSearch);
 
 			}
@@ -99,6 +117,7 @@ public class SearchScreen extends Screen implements ActionListener {
 				Object item = dlm.getElementAt(index);
 				list.ensureIndexIsVisible(index);
 				//TODO: start file download if not already started
+				Controler.startDownload();
 				System.out.println("iniciar download");
 			}
 		}

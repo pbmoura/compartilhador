@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -48,8 +49,8 @@ public class SplashScreen extends Screen {
 
 	
 	public void setupSize() {
-		getOwner().setSize(Constants.SPLASH_SCREEN_WIDTH, Constants.SPLASH_SCREEN_HEIGHT);
-
+		setPreferredSize(new Dimension(Constants.SPLASH_SCREEN_WIDTH, 
+				Constants.SPLASH_SCREEN_HEIGHT));
 	}
 	
 	class EventSplashEnd extends TimerTask{

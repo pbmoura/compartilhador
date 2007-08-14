@@ -16,7 +16,7 @@ public interface Constants {
 	public static final int TRANSFER_SCREEN_WIDTH = 300;
 	public static final int TRANSFER_SCREEN_HEIGHT = 300;
 	
-	public static final int SPLASH_TIME=2000;
+	public static final int SPLASH_TIME=1500;
 	
 	/* Screen IDs */
 	public static final int SPLASH_SCREEN=-1;
@@ -46,6 +46,10 @@ public interface Constants {
 	public static final String SEARCH_SCREEN_SEARCH_LABEL= "Consulta";
 	
 	public static final String TRANSFER_SCREEN_TITLE = "Transferências";
+	public static final String[] SEARCH_TABLE_HEADER = {"Nome do Arquivo",
+            "Tamanho",
+            "ID"
+            };
 
 	
 	/** Application Constants */
