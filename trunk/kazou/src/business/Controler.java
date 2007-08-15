@@ -54,8 +54,9 @@ public class Controler {
 		return v;
 		
 	}
-	public static void startDownload() {
+	public static void startDownload(Object hash) {
 		// TODO Auto-generated method stub
+		System.out.println("Controler.startDownload()");
 		
 	}
 	

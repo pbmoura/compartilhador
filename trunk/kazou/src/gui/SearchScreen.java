@@ -2,20 +2,18 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -27,7 +25,6 @@ public class SearchScreen extends Screen implements ActionListener {
 	private static SearchScreen instance;	
 	private JTextField tfSearch ;
 	private JButton btSearch;
-	private JList lSearch ;
 	private JTable tbSearch;
 
 	
@@ -47,29 +44,23 @@ public class SearchScreen extends Screen implements ActionListener {
 		tfSearch = new JTextField(10);
 		btSearch = new JButton(Constants.OK_LABEL);
 		
-		DefaultListModel lmSearch =new DefaultListModel();
-		
-		lSearch  = new JList(lmSearch);
-		
-		DefaultTableModel tbModel = new DefaultTableModel(10,3);
-		tbModel.setColumnIdentifiers(Constants.SEARCH_TABLE_HEADER);
-		tbSearch = new JTable(tbModel);
+		                     /*Configure table*/
+		tbSearch = new JTable(new MyTableModel());
 		tbSearch.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbSearch.setShowGrid(false);
+		tbSearch.getTableHeader().setReorderingAllowed(false);
 		JScrollPane tbScroll = new JScrollPane(tbSearch);
 		
 		//Handle events
 		btSearch.addActionListener(this);
-		lSearch.addMouseListener(new JListDoubleClickListener());
+		tbSearch.addMouseListener(new TableDoubleClickListener());
 		
 		//Add 
-		addComponentToGridBag(lbSearch, 0, 1, 1, 1);
-		addComponentToGridBag(tfSearch, 1, 1, 2, 1);
-		addComponentToGridBag(btSearch, 3, 1, 1, 1);
+		addToGridBag(lbSearch, 0, 1, 1, 1,0,0,GridBagConstraints.NONE);
+		addToGridBag(tfSearch, 1, 1, 2, 1,1,0,GridBagConstraints.BOTH);
+		addToGridBag(btSearch, 3, 1, 1, 1,0,0,GridBagConstraints.NONE);
 		
-		addComponentToGridBag(tbSearch, 0, 2, 4, 2);
-//		addComponentToGridBag(tbScroll, 0, 2, 4, 2);
-//		addComponentToGridBag(lSearch, 0, 2, 4, 2);
+		addToGridBag(tbScroll, 0, 2, 4, GridBagConstraints.REMAINDER,0,1,GridBagConstraints.BOTH);
 		
 	}
 	
@@ -81,7 +72,7 @@ public class SearchScreen extends Screen implements ActionListener {
 	
 	public void reset() {
 		tfSearch.setText("");
-		lSearch.setModel(new DefaultListModel());
+		tbSearch.setModel(new MyTableModel());
 
 	}
 
@@ -91,11 +82,9 @@ public class SearchScreen extends Screen implements ActionListener {
 			String text=tfSearch.getText();
 			if (text !=null && text.length()!=0){
 				Vector results = Controler.searchFile(text);
-				DefaultListModel lmSearch =new DefaultListModel();
-				for(int i=0;i<results.size();i++){
-				lmSearch.addElement((String)results.get(i));
-				}
-				lSearch.setModel(lmSearch);
+				
+				tbSearch.setModel(new MyTableModel());
+				fillTable(results);				
 
 			}
 		}
@@ -103,24 +92,54 @@ public class SearchScreen extends Screen implements ActionListener {
 	}
 
 	
+	private void fillTable(Vector results) {
+		// TODO: Determine how this table is filled
+		for(int i=0;i<results.size();i++){
+			tbSearch.setValueAt(results.get(i),i,0);
+			tbSearch.setValueAt("Tamanho em kb",i,1);
+			tbSearch.setValueAt("Valor hash",i,2);
+		}
+	}
+
 	public void setupSize() {
 		setPreferredSize(new Dimension(Constants.SEARCH_SCREEN_WIDTH, Constants.SEARCH_SCREEN_HEIGHT));
 	}
 	
-	class JListDoubleClickListener extends MouseAdapter{
+	/**
+	 * 
+	 * Double click event for the results table
+	 * @author ncq
+	 *
+	 */
+	class TableDoubleClickListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e){
 			//Double click
-			if(e.getClickCount() == 2){
-				JList list = (JList)e.getSource();
-				int index = list.locationToIndex(e.getPoint());
-				ListModel dlm = list.getModel();
-				Object item = dlm.getElementAt(index);
-				list.ensureIndexIsVisible(index);
-				//TODO: start file download if not already started
-				Controler.startDownload();
-				System.out.println("iniciar download");
+			if(e.getClickCount() == 2){							
+				JTable table = (JTable)e.getSource();				
+				int index = table.getSelectedRow();
+				//the hash value is at column number 2
+				Object hash = table.getModel().getValueAt(index,2);
+				//Start file download if not already started
+				if (hash!=null){
+					Controler.startDownload(hash);
+				}
 			}
 		}
+	}
+	
+	/**
+	 * This class defines a table model for our application
+	 * @author ncq
+	 *
+	 */
+	class MyTableModel extends DefaultTableModel{
+		public MyTableModel(){
+			super(10,3);
+			setColumnIdentifiers(Constants.SEARCH_TABLE_HEADER);
+		}
+		public boolean isCellEditable(int rowIndex, int mColIndex){ 
+	          return false; 
+	     }
 	}
 
 }

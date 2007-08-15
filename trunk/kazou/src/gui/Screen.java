@@ -3,6 +3,7 @@ package gui;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -27,8 +28,10 @@ public abstract class Screen extends JPanel {
 		return frame;
 	}
 	
-	public void addComponentToGridBag(Component c, int x, int y, int width, int height){
-		
+	public void addToGridBag(Component c, int x, int y, int width, int height,double weightx,double weighty,int fill){
+		constraints.weightx=weightx;
+		constraints.weighty=weighty;
+		constraints.fill=fill;
 		constraints.gridx=x;
 		constraints.gridy=y;
 		constraints.gridwidth=width;
@@ -40,8 +43,9 @@ public abstract class Screen extends JPanel {
 	public void setupGridBagLayout() {
 		gbLayout = new GridBagLayout();
 		setLayout(gbLayout);
-		constraints = new GridBagConstraints();		
-		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints = new GridBagConstraints();	
+		constraints.insets = new Insets(5,5,5,5); 
+//		constraints.fill = GridBagConstraints.HORIZONTAL;
 	}
 	
 	public void setupTabbedPane(){
