@@ -8,8 +8,6 @@ import java.awt.Insets;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import util.Constants;
-
 public abstract class Screen extends JPanel {
 
 	private MainFrame frame;
@@ -45,7 +43,6 @@ public abstract class Screen extends JPanel {
 		setLayout(gbLayout);
 		constraints = new GridBagConstraints();	
 		constraints.insets = new Insets(5,5,5,5); 
-//		constraints.fill = GridBagConstraints.HORIZONTAL;
 	}
 	
 	public void setupTabbedPane(){

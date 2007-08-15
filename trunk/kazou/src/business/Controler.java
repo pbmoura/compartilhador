@@ -51,6 +51,12 @@ public class Controler {
 		v.add("resultado stub 1");
 		v.add("resultado stub 2");
 		v.add("resultado stub 3");
+		v.add("resultado stub 4");
+		v.add("resultado stub 5");
+		v.add("resultado stub 6");
+		v.add("resultado stub 7");
+		v.add("resultado stub 8");
+		v.add("resultado stub 9");
 		return v;
 		
 	}
