@@ -55,15 +55,15 @@ public class SetupScreen extends Screen implements ActionListener{
 		btCancel.addActionListener(this);
 		
 		//Add items to pane
-		this.addComponentToGridBag(tfLabel,0,1,1,1);		
-		this.addComponentToGridBag(tfRepAddress,1,1,1,1);
-		this.addComponentToGridBag(btBrowse,2,1,1,1);
+		this.addToGridBag(tfLabel,0,1,1,1,0,0,GridBagConstraints.HORIZONTAL);		
+		this.addToGridBag(tfRepAddress,1,1,1,1,0,0,GridBagConstraints.HORIZONTAL);
+		this.addToGridBag(btBrowse,2,1,1,1,0,0,GridBagConstraints.HORIZONTAL);
 		
-		this.addComponentToGridBag(cbLabel,0,2,1,1);
-		this.addComponentToGridBag(cbChooseSupernode,1,2,1,1);
+		this.addToGridBag(cbLabel,0,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
+		this.addToGridBag(cbChooseSupernode,1,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
 		
-		this.addComponentToGridBag(btOk,0,3,1,1);
-		this.addComponentToGridBag(btCancel,2,3,1,1);
+		this.addToGridBag(btOk,0,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
+		this.addToGridBag(btCancel,2,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
 	}
 
 	public String getTitle(){
