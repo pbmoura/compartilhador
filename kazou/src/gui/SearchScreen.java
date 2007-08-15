@@ -52,6 +52,7 @@ public class SearchScreen extends Screen implements ActionListener {
 		JScrollPane tbScroll = new JScrollPane(tbSearch);
 		
 		//Handle events
+		tfSearch.addActionListener(this);
 		btSearch.addActionListener(this);
 		tbSearch.addMouseListener(new TableDoubleClickListener());
 		
@@ -78,12 +79,12 @@ public class SearchScreen extends Screen implements ActionListener {
 
 	public void actionPerformed(ActionEvent arg0) {
 		Object source = arg0.getSource();
-		if(source == btSearch){
+		if(source == btSearch || source ==tfSearch){
 			String text=tfSearch.getText();
 			if (text !=null && text.length()!=0){
 				Vector results = Controler.searchFile(text);
+				//reset
 				
-				tbSearch.setModel(new MyTableModel());
 				fillTable(results);				
 
 			}
@@ -94,10 +95,11 @@ public class SearchScreen extends Screen implements ActionListener {
 	
 	private void fillTable(Vector results) {
 		// TODO: Determine how this table is filled
+		MyTableModel tbModel =new MyTableModel();
+		tbSearch.setModel(tbModel);
 		for(int i=0;i<results.size();i++){
-			tbSearch.setValueAt(results.get(i),i,0);
-			tbSearch.setValueAt("Tamanho em kb",i,1);
-			tbSearch.setValueAt("Valor hash",i,2);
+			tbModel.addRow(new String[]{(String)results.get(i),"Tamanho em kb","Valor hash"});
+			
 		}
 	}
 
@@ -134,7 +136,7 @@ public class SearchScreen extends Screen implements ActionListener {
 	 */
 	class MyTableModel extends DefaultTableModel{
 		public MyTableModel(){
-			super(10,3);
+			super(0,3);
 			setColumnIdentifiers(Constants.SEARCH_TABLE_HEADER);
 		}
 		public boolean isCellEditable(int rowIndex, int mColIndex){ 
