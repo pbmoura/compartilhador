@@ -13,8 +13,8 @@ public interface Constants {
 	public static final int SEARCH_SCREEN_WIDTH = 300;
 	public static final int SEARCH_SCREEN_HEIGHT = 300;
 
-	public static final int TRANSFER_SCREEN_WIDTH = 300;
-	public static final int TRANSFER_SCREEN_HEIGHT = 300;
+	public static final int TRANSFER_SCREEN_WIDTH = 500;
+	public static final int TRANSFER_SCREEN_HEIGHT = 500;
 	
 	public static final int SPLASH_TIME=1500;
 	
@@ -46,11 +46,11 @@ public interface Constants {
 	public static final String SEARCH_SCREEN_SEARCH_LABEL= "Consulta";
 	
 	public static final String TRANSFER_SCREEN_TITLE = "Transferências";
+	
 	public static final String[] SEARCH_TABLE_HEADER = {"Nome do Arquivo",
-            "Tamanho",
-            "ID"
-            };
-
+            "Tamanho", "ID"};
+	public static final String[] DOWNLOAD_TABLE_HEADER = {"Nome do Arquivo",
+        "Taxa","Tamanho","Completo"};
 	
 	/** Application Constants */
 
