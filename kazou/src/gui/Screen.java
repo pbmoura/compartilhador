@@ -45,6 +45,10 @@ public abstract class Screen extends JPanel {
 		constraints.insets = new Insets(5,5,5,5); 
 	}
 	
+	public void setInsets(Insets insets){
+		constraints.insets = insets;
+	}
+	
 	public void setupTabbedPane(){
 		//TODO
 		tabbedPane = new JTabbedPane();
