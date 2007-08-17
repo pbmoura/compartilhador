@@ -36,7 +36,7 @@ public class ManagementScreen extends Screen {
 
 	
 	public void setupSize() {
-		//Do anything: preferred size is decided by its tabs
+		//Do nothing: preferred size is decided by its tabs
 		
 	}
 
