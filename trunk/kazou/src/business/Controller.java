@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import util.Constants;
 
-public class Controler {
+public class Controller {
 	
 	public static void main(String args[]){
 		//TODO:check the place of this main()

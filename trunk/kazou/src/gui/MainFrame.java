@@ -8,7 +8,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
-import business.Controler;
+import business.Controller;
 import util.Constants;
 
 public class MainFrame extends JFrame {
@@ -20,7 +20,7 @@ public class MainFrame extends JFrame {
 		super("");
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				Controler.exit(0);
+				Controller.exit(0);
 			}
 		});	
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Constants.WINDOW_ICON));
