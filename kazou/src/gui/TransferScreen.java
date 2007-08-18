@@ -63,7 +63,7 @@ public class TransferScreen extends Screen implements ActionListener {
 		addToGridBag(downloadTable,0,1,1,GridBagConstraints.REMAINDER,0.7,1,GridBagConstraints.BOTH);
 		
 		//Fill with the tranfers
-		Vector downloads = Controler.getCurrentDownloads();
+		Vector downloads = Controller.getCurrentDownloads();
 		for (int i=0;i<downloads.size();i++){
 			FileInfo fileInfo = (FileInfo) downloads.get(i);
 			

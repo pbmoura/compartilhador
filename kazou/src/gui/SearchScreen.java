@@ -81,7 +81,7 @@ public class SearchScreen extends Screen implements ActionListener {
 		if(source == btSearch || source ==tfSearch){
 			String text=tfSearch.getText();
 			if (text !=null && text.length()!=0){
-				Vector results = Controler.searchFile(text);
+				Vector results = Controller.searchFile(text);
 				//reset table				
 				fillTable(results);				
 
@@ -124,7 +124,7 @@ public class SearchScreen extends Screen implements ActionListener {
 				Object hash = table.getModel().getValueAt(index,2);
 				//Start file download if not already started
 				if (hash!=null){
-					Controler.startDownload(hash);
+					Controller.startDownload(hash);
 				}
 			}
 		}

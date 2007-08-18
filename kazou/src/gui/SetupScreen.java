@@ -37,7 +37,7 @@ public class SetupScreen extends Screen implements ActionListener{
 		//Create items
 		JLabel tfLabel = new JLabel(Constants.SETUP_SCREEN_REP_LABEL);
 		tfRepAddress = new JTextField(10);	
-		tfRepAddress.setText(Controler.getUserRepositoryPath());
+		tfRepAddress.setText(Controller.getUserRepositoryPath());
 		
 		btBrowse     = new JButton(Constants.SETUP_SCREEN_BROWSE_LABEL);		
 		btOk         = new JButton(Constants.OK_LABEL);
@@ -45,7 +45,7 @@ public class SetupScreen extends Screen implements ActionListener{
 		
 		JLabel cbLabel = new JLabel(Constants.SETUP_SCREEN_SUPERNODE_LABEL);		
 		cbChooseSupernode = new JComboBox();
-		ComboBoxModel cbModel = new DefaultComboBoxModel(Controler.getSuperNodeList());
+		ComboBoxModel cbModel = new DefaultComboBoxModel(Controller.getSuperNodeList());
 		cbChooseSupernode.setModel(cbModel);
 		
 		
@@ -86,7 +86,7 @@ public class SetupScreen extends Screen implements ActionListener{
 			String text = tfRepAddress.getText();
 			if (text != null && text.trim().length()!=0){
 				//Configure user and goto search screen
-				Controler.configureUser(tfRepAddress.getText(),(String)cbChooseSupernode.getSelectedItem());
+				Controller.configureUser(tfRepAddress.getText(),(String)cbChooseSupernode.getSelectedItem());
 				getOwner().showScreen(Constants.MANAGEMENT_SCREEN);
 			}else{
 				//mandatory field not filled
@@ -97,7 +97,7 @@ public class SetupScreen extends Screen implements ActionListener{
 			//Ignore modifications and go to former screen, or exit
 			int oldScreenID = getOwner().getOldScreenID();
 			if(oldScreenID == -1){
-				Controler.exit(0);
+				Controller.exit(0);
 			}else{
 				getOwner().showScreen(oldScreenID);
 			}
@@ -108,12 +108,12 @@ public class SetupScreen extends Screen implements ActionListener{
 	public void reset() {
 		
 		//Keep the user`s repositorty path
-		tfRepAddress.setText(Controler.getUserRepositoryPath());
+		tfRepAddress.setText(Controller.getUserRepositoryPath());
 		
 		//Keep the selected supernode
 		Object selectedSupernode = cbChooseSupernode.getSelectedItem();
 		//reset supernode list		
-		Vector supernodes = Controler.getSuperNodeList();
+		Vector supernodes = Controller.getSuperNodeList();
 		ComboBoxModel cbModel = new DefaultComboBoxModel(supernodes);
 		cbChooseSupernode.setModel(cbModel);
 		
