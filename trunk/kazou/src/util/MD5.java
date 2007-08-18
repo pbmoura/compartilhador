@@ -56,7 +56,7 @@ public class MD5 {
 			 *digest class which implements the MD5 algorithm.
 			 *The first example asks for any implementation of MD5,
 			 *and the second requests SUN's implementation, which is actually also
-			the default.
+			 *the default.
 			 */
 			f = new File(filepath);
 			msg = new byte[len = (int) f.length()];

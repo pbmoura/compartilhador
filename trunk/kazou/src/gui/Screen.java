@@ -34,6 +34,7 @@ public abstract class Screen extends JPanel {
 		constraints.gridy=y;
 		constraints.gridwidth=width;
 		constraints.gridheight=height;
+		constraints.anchor= GridBagConstraints.NORTHWEST;
 		gbLayout.setConstraints(c, constraints);
 		add(c);
 	}
