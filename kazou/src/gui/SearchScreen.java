@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
@@ -18,7 +17,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import util.Constants;
-import business.Controler;
+import business.*;
 
 public class SearchScreen extends Screen implements ActionListener {
 
@@ -83,8 +82,7 @@ public class SearchScreen extends Screen implements ActionListener {
 			String text=tfSearch.getText();
 			if (text !=null && text.length()!=0){
 				Vector results = Controler.searchFile(text);
-				//reset
-				
+				//reset table				
 				fillTable(results);				
 
 			}
@@ -98,7 +96,10 @@ public class SearchScreen extends Screen implements ActionListener {
 		MyTableModel tbModel =new MyTableModel();
 		tbSearch.setModel(tbModel);
 		for(int i=0;i<results.size();i++){
-			tbModel.addRow(new String[]{(String)results.get(i),"Tamanho em kb","Valor hash"});
+			FileInfo fileInfo = (FileInfo) results.get(i);
+			tbModel.addRow(new String[]{fileInfo.getFilename(),
+					String.valueOf(fileInfo.getSizeInKB()),
+					String.valueOf(fileInfo.getHashValue())});
 			
 		}
 	}
