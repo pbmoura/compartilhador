@@ -48,15 +48,10 @@ public class Controler {
 	public static Vector searchFile(String fileName) {
 		// TODO Auto-generated method stub
 		Vector v = new Vector();
-		v.add("resultado stub 1");
-		v.add("resultado stub 2");
-		v.add("resultado stub 3");
-		v.add("resultado stub 4");
-		v.add("resultado stub 5");
-		v.add("resultado stub 6");
-		v.add("resultado stub 7");
-		v.add("resultado stub 8");
-		v.add("resultado stub 9");
+		v.add(new FileInfo("policy"));
+		v.add(new FileInfo("SplashImage.jpg"));
+		v.add(new FileInfo("window_ico.png"));
+		
 		return v;
 		
 	}
@@ -64,6 +59,15 @@ public class Controler {
 		// TODO Auto-generated method stub
 		System.out.println("Controler.startDownload()");
 		
+	}
+	public static Vector getCurrentDownloads() {
+		// TODO Auto-generated method stub
+		Vector v = new Vector();
+		v.add(new FileInfo("policy"));
+		v.add(new FileInfo("SplashImage.jpg"));
+		v.add(new FileInfo("window_ico.png"));
+		
+		return v;
 	}
 	
 
