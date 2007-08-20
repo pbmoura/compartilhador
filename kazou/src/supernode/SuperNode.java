@@ -9,14 +9,15 @@ import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import nameserver.INameServer;
-import nameserver.NameServer;
 import node.INodeUI;
 import node.Node;
 
@@ -29,36 +30,41 @@ import node.Node;
  */
 public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	private String name;
-	private Hashtable nodes;
+	private Hashtable files;
+	private ISuperNode sNode;
+	private List superNodes;
 	private Node n;
-	private NameServer server;
-	private INameServer nameserver;
 	private Vector runningSearchs;
-	public SuperNode (String name,String nameserveradd, String repository) throws RemoteException {
+	private Random rand;
+	public SuperNode (String name, String superNode, String repository) throws RemoteException {
 		super();
 		this.name = name;
-		nodes = new Hashtable();
-		server = new NameServer(name);
+		files = new Hashtable();
 		runningSearchs = new Vector();
-		init(nameserveradd);
-		n = new Node(name,nameserveradd, repository);
+		superNodes = new ArrayList();
+		init(superNode);
+		n = new Node(name,superNode, repository);
+		rand = new Random();
 	}
 		
-	private void init(String nserver) {
+	private void init(String superNode) {
 		if (System.getSecurityManager() == null) {
             System.setSecurityManager(new RMISecurityManager());
         }
 		try {
-			server.init();
-    		String ServerName = "//"+nserver+"/nameserver";
-    		nameserver = (INameServer) Naming.lookup(ServerName);
-    		System.err.println("Entrando...");
-    		String objname = "//"+this.name+"/supernode";
-    		nameserver.addSuperNode(this.name);
-    		Naming.rebind(objname,this);
+			String objname = "//"+this.name+"/supernode";
+			if (!this.name.equals(superNode)) {
+				String supNode = "//"+superNode+"/supernode";
+	    		sNode = (ISuperNode) Naming.lookup(supNode);
+	    		System.err.println("Entrando...");
+	    		sNode.addSuperNode(this.name);
+	    		this.addSuperNode(superNode);
+			}
+			Naming.rebind(objname,this);
     		System.err.println("SuperNode pronto...");
+    		this.addSuperNode(name);
     	} catch (java.rmi.ConnectException ce) {
-    		JOptionPane.showMessageDialog(null,"Não foi possivel conectar a //"+nserver);
+    		JOptionPane.showMessageDialog(null,"Não foi possivel conectar a //"+superNode);
     		ce.printStackTrace();
  
     	} catch(Exception e) {
@@ -68,6 +74,25 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
     	
 	}
 	
+	public void addSuperNode(String name) {
+		superNodes.add(name);
+	}
+	
+	public String getRadomSuperNode() {
+		int r = Math.abs(rand.nextInt()) % superNodes.size();
+		return (String) superNodes.get(r);
+	}
+	
+	/** 
+	 * Retorna uma lista com todos os supernos
+	 */
+	public List getSuperNodes() throws RemoteException{
+		if (!superNodes.isEmpty()) {
+			return superNodes;
+		} 
+		return null;
+	}
+
 	private ISuperNode connectToSuperNode (String address) {
 		ISuperNode sn = null;
 		if (System.getSecurityManager() == null) {
@@ -98,16 +123,16 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	/* 
 	 * Recebe o endereço do cliente e cadastra seus arquivos em sua tabela Hash
 	 */
-	public void setNode(String NodeAddress, Vector filevector) throws RemoteException {
-		Vector v;
+	public void setNode(String nodeAddress, List filevector) throws RemoteException {
+		List nodes;
 		for (int i=0;i<filevector.size();i++) {
-			if (nodes.containsKey(filevector.get(i))) {
-				v = (Vector) nodes.get(filevector.get(i));
+			if (files.containsKey(filevector.get(i))) {
+				nodes = (List) files.get(filevector.get(i));
 			} else {
-				v = new Vector();
-				nodes.put(filevector.get(i),v);
+				nodes = new ArrayList();
+				files.put(filevector.get(i),nodes);
 			}
-			v.add(NodeAddress);
+			nodes.add(nodeAddress);
 		}
 	}
 
@@ -126,7 +151,7 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	/* (non-Javadoc)
 	 * @see supernode.ISuperNode#searchFile(java.lang.String)
 	 */
-	public Vector searchFile(String file, String name) throws RemoteException {
+	public List searchFile(String file, String name) throws RemoteException {
 		//se a busca já foi feita neste supernó
 		if (runningSearchs.contains(name))
 			return null;
@@ -134,24 +159,24 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 		runningSearchs.add(name);
 		
 		//Vector v = nameserver.getSuperNodes();
-		Vector v = server.getSuperNodes();
-		Vector machines = new Vector();
+		List v = getSuperNodes();
+		List machines = new ArrayList();
 		
-		if ((Vector)nodes.get(file)!=null) {
+		if ((List)files.get(file)!= null) {
 			//machines.addAll((Vector)nodes.get(file));
-			getNodeUI(name).addMachines((Vector)nodes.get(file));
+			getNodeUI(name).addMachines((List)files.get(file));
 		}
-		for (int i=0;i<v.size();i++) {
+		for (int i=0;i < v.size();i++) {
 			String address = (String)v.get(i);
 			if (!address.equalsIgnoreCase(this.name)) {
 				System.out.println("Estou procurando em :"+address);
 				ISuperNode sn = connectToSuperNode(address);
 				if (sn!=null){
 					System.out.println("SN não eh nulo: "+address);
-					Collection c = sn.getVector(file);
+					List c = sn.getFileNodes(file);
 					if (c!=null) {
 						//machines.addAll(c);
-						getNodeUI(name).addMachines((Vector)c);
+						getNodeUI(name).addMachines((List)c);
 					}
 				}
 			}
@@ -166,8 +191,8 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	/* (non-Javadoc)
 	 * @see supernode.ISuperNode#getVector(java.lang.String)
 	 */
-	public Vector getVector(String file) throws RemoteException {
-		return (Vector)nodes.get(file);
+	public List getFileNodes(String file) throws RemoteException {
+		return (List)files.get(file);
 	}
 
 	/* (non-Javadoc)

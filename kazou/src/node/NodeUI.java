@@ -7,29 +7,29 @@ import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
-
-import nameserver.INameServer;
 import supernode.ISuperNode;
 
 public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	private String name;
-	private INameServer nameserver;
 	private ISuperNode supernode;
 	private INode node;
-	private String nsname;
+	//private String nsname;
+	private String superNodeName;
 	private String repository;
-	private Vector machines;
+	private List machines;
 	File folder;
 	
 	public NodeUI(String name, String ns, String repository) throws RemoteException {
 		super();
 		this.name = name;
-		this.nsname = ns;
+		this.superNodeName = ns;
 		this.repository = repository;
-		this.machines = new Vector();
+		this.machines = new ArrayList();
 		init();
 	}
 	
@@ -49,15 +49,14 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	
 	public void run() {
 		//retorna super no
-		System.out.println("NSNAME eh: "+nsname);
-		String sn = connectNameServer(this.nsname);
-		connectSuperNode(sn);
-		System.out.println("dependo do superno: "+sn);
+		System.out.println("NSNAME eh: "+this.superNodeName);
+		connectSuperNode(this.superNodeName);
+		System.out.println("dependo do superno: "+this.superNodeName);
 		insertClient();
 		searchFile();
 	}
 	
-	public synchronized void addMachines(Vector v) {
+	public synchronized void addMachines(List v) {
 		machines.addAll(v);
 	}
 	
@@ -69,7 +68,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		//File folder = new File("/tmp/kazou");
 		folder = new File(repository);
 		String [] str = folder.list();
-		Vector v = new Vector();
+		List v = new ArrayList();
 		for (int i=0;i<str.length;i++) {
 			v.add(str[i]);
 		}
@@ -121,8 +120,8 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
         }
 	}
 	
-	private Vector getAddressVector (String file) {
-		Vector v = null;
+	private List getAddressVector (String file) {
+		List v = null;
 		try {
 			v = supernode.searchFile(file, name);
 			
@@ -164,34 +163,6 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
     		e.printStackTrace();
     		//System.exit(1);
     	}
-    }
-	
-	private String connectNameServer (String s) {
-		if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new RMISecurityManager());
-        }
-		try {
-    		String ServerName = "//"+s+"/nameserver";
-    		nameserver = (INameServer) Naming.lookup(ServerName);
-    		System.out.println("CONSEGUI");
-    	} catch (java.rmi.ConnectException ce) {
-    		JOptionPane.showMessageDialog(null,"Não foi possivel conectar a //"+s+"/simorg");
-    	} catch(Exception e) {
-    		//System.err.println("Erro desconhecido.."); e.printStackTrace();
-    		JOptionPane.showMessageDialog(null,"Erro desconhecido na conexão com o servidor");
-    		e.printStackTrace();
-    		//System.exit(1);
-    	}
-    	String result = "";
-    	try {
-    		//Vector coisa = nameserver.getSuperNodes();
-    		//System.out.println(coisa);
-    		result = nameserver.getSuperNode();
-    	} catch (RemoteException re) {
-    		System.out.println("Não consegui retornar um supernode");
-    		re.printStackTrace();
-    	}
-    	return result;
     }
 	
 }
