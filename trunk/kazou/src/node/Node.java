@@ -11,11 +11,6 @@ import java.rmi.RemoteException;
 
 import util.Net;
 
-/**
- * @author rodrigo
- *
- * Esta classe representa um cliente da rede
- */
 public class Node {
 	
 	private String ip;
