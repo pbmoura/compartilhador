@@ -6,7 +6,10 @@
  */
 package node;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
+
+import util.Net;
 
 /**
  * @author rodrigo
@@ -19,8 +22,8 @@ public class Node {
 	NodeServer nodeServer;
 	NodeUI nodeUI;
 	
-	public Node(String ip, String nameServerIP, String repository) {
-		this.ip = ip;
+	public Node(String nameServerIP, String repository) throws IOException {
+		this.ip = Net.getLocalIPAddress();
 		try {
 			nodeServer = new NodeServer(ip, repository);
 			nodeUI = new NodeUI(ip, nameServerIP, repository);
@@ -30,7 +33,7 @@ public class Node {
 		new Thread(nodeUI).start();		
 	}
 	
-	public static void main(String[] args) {
-		new Node(args[0],args[1], args[2]);
+	public static void main(String[] args) throws IOException {
+		new Node(args[0],args[1]);
 	}
 }
