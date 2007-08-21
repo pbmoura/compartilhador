@@ -173,11 +173,12 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 				ISuperNode sn = connectToSuperNode(address);
 				if (sn!=null){
 					System.out.println("SN não eh nulo: "+address);
-					List c = sn.getFileNodes(file);
+					sn.searchFile(file, name);
+					/*List c = sn.getFileNodes(file);
 					if (c!=null) {
 						//machines.addAll(c);
 						getNodeUI(name).addMachines((List)c);
-					}
+					}*/
 				}
 			}
 		}
