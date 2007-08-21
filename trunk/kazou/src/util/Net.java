@@ -35,7 +35,7 @@ public class Net {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		Net.getLocalIPAddress();
+		System.out.println(Net.getLocalIPAddress());
 	}
 	
 }
