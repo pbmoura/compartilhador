@@ -14,19 +14,20 @@ import java.rmi.RemoteException;
  * Esta classe representa um cliente da rede
  */
 public class Node {
-	private String name;
-	NodeServer ns;
-	NodeUI nui;
-	public Node(String name,String nameserver, String repository) {
-		this.name = name;
+	
+	private String ip;
+	NodeServer nodeServer;
+	NodeUI nodeUI;
+	
+	public Node(String ip, String nameServerIP, String repository) {
+		this.ip = ip;
 		try {
-			ns = new NodeServer(name, repository);
-			nui = new NodeUI(name,nameserver, repository);
-			//new Thread(ns).start();
+			nodeServer = new NodeServer(ip, repository);
+			nodeUI = new NodeUI(ip, nameServerIP, repository);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		new Thread(nui).start();		
+		new Thread(nodeUI).start();		
 	}
 	
 	public static void main(String[] args) {
