@@ -24,8 +24,9 @@ public class Net {
 				if(!inet.isLoopbackAddress()) {
 					String hostAddress = inet.getHostAddress();
 					
-					if(hostAddress.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"))
-						System.out.println(hostAddress);
+					if(hostAddress.matches(
+							"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"))
+						ip = hostAddress;
 				}
 			}
 		}
