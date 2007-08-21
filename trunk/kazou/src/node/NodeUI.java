@@ -21,33 +21,34 @@ import javax.swing.JOptionPane;
 import supernode.ISuperNode;
 
 public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
-	private String name;
-	private ISuperNode supernode;
+	
+	private String ip;
+	private ISuperNode superNode;
 	private INode node;
-	//private String nsname;
-	private String superNodeName;
+	private String superNodeIP;
 	private String repository;
 	private List<String> machines;
 	File folder;
 	
-	public NodeUI(String name, String ns, String repository) throws RemoteException {
+	public NodeUI(String ip, String superNodeIP, String repository) throws RemoteException {
 		super();
-		this.name = name;
-		this.superNodeName = ns;
+		this.ip = ip;
+		this.superNodeIP = superNodeIP;
 		this.repository = repository;
 		this.machines = new ArrayList();
 		init();
 	}
 	
 	private void init() {
+		
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new RMISecurityManager());
-	    } 
-		//NodeServer s = new NodeServer();
-		String objname = "//"+this.name+"/nodeui";
+	    }
+		
+		String objname = "//"+this.ip+"/nodeui";
 		try {
 			Naming.rebind(objname, this);
-			System.err.println("interface pronta");
+			System.out.println("interface pronta");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,9 +60,9 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	
 	public void run() {
 		//retorna super no
-		System.out.println("NSNAME eh: "+this.superNodeName);
-		connectSuperNode(this.superNodeName);
-		System.out.println("dependo do superno: "+this.superNodeName);
+		System.out.println("NSNAME eh: "+this.superNodeIP);
+		connectToSuperNode(this.superNodeIP);
+		System.out.println("dependo do superno: "+this.superNodeIP);
 		insertClient();
 		searchFile();
 	}
@@ -74,39 +75,50 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		
 	}
 	
+	/**
+	 * Insere esse cliente no superNode juntamente
+	 * com a lista de arquivos disponíveis nesse cliente.
+	 */
 	private void insertClient() {
-		//File folder = new File("/tmp/kazou");
 		folder = new File(repository);
-		String [] str = folder.list();
-		List v = new ArrayList();
-		for (int i=0;i<str.length;i++) {
-			v.add(str[i]);
+		String [] folderList = folder.list();
+		
+		List<String> folderListAux = new ArrayList<String>();
+		
+		for (int i=0;i<folderList.length;i++) {
+			folderListAux.add(folderList[i]);
 		}
+		
 		try {
-			supernode.setNode(this.name,v);
+			superNode.setNode(this.ip, folderListAux);
 		} catch(RemoteException e) {
 			e.printStackTrace();
 		}
-		
 	}
+	
 	public void disconnect(){
 		
 	}
+	
 	private void searchFile () {
 		while (true) {
 			System.out.println("Digite o nome do arquivo");
-			String str = IO.readStr();
-			if (str.equals("") || str==null){
+			String fileName = IO.readStr();
+			
+			if (fileName.equals("") || fileName==null){
 				disconnect();
 				System.exit(0);
-			} 
+			
+			}
+			
 			machines.clear();
-			getAddressVector(str);
+			getAddressVector(fileName);
+			
 			if (machines!=null && !machines.isEmpty()) {
 				System.out.println(machines);
 				int choice = IO.readInt();
 				connectNode(machines.get(choice));
-				new DownloadManager(this, str).download();
+				new DownloadManager(this, fileName).download();
 				
 				/*try {
 					String file = node.getFile(str);
@@ -135,8 +147,9 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	
 	private List getAddressVector (String file) {
 		List v = null;
+		
 		try {
-			v = supernode.searchFile(file, name);
+			v = superNode.searchFile(file, ip);
 			
 		} catch (RemoteException re) {
 			re.printStackTrace();
@@ -162,45 +175,38 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
     	return null;
     }
 	
-	private void connectSuperNode(String server) {
+	private void connectToSuperNode(String server) {
+		
 		if (System.getSecurityManager() == null) {
             System.setSecurityManager(new RMISecurityManager());
         }
+		
 		try {
-    		String ServerName = "//"+server+"/supernode";
-    		supernode = (ISuperNode) Naming.lookup(ServerName);
+    		String serverName = "//"+server+"/supernode";
+    		superNode = (ISuperNode) Naming.lookup(serverName);
     		System.out.println("CONSEGUI");
     	} catch (java.rmi.ConnectException ce) {
     		JOptionPane.showMessageDialog(null,"Não foi possivel conectar a //"+server+"/supernode");
     	} catch(Exception e) {
-    		//System.err.println("Erro desconhecido.."); e.printStackTrace();
     		JOptionPane.showMessageDialog(null,"Erro desconhecido na conexão com o servidor");
     		e.printStackTrace();
-    		//System.exit(1);
     	}
     }
 
 	public void downloadFile(String nome,long startOffset,int totallength, INode ns) throws RemoteException {
-		/**
-		 * Objeto(s) de coneccao com o server
-		 */
-		//TODO: apagar proxima linha 
-		//MainTest mt=new MainTest();
-		//long size=mt.getFileSize(nome);
 		
 		// Criar um diretorio para conter os downloads do arquivo
 		String diretorio=nome.replace('.','_');
 		File dir=new File(repository+File.separator+diretorio);
+		
 		if(!dir.exists()){
 			dir.mkdir();
-			//TODO gravar arquivo com o tamnho total do arquivo
 		}
 		
 		// Cada pacote tera 1KB de dados
-		final int length =1024;     // 1 KB
+		final int length = 1024;     // 1 KB
 		
 		long offset=startOffset;
-		
 		
 		// numero de loops
 		int counter=totallength/length;
@@ -256,7 +262,6 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		
 	}
 	

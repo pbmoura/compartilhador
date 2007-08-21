@@ -7,13 +7,13 @@ public class DownloadManager {
 	
 	private NodeUI nodeUI;
 	private String filename;
-	private static final int packetLength=512 * 1024;
+	private static final int packetLength = 512 * 1024;
 	private long offSet;
 	private long filesize;
 	
-	public DownloadManager(NodeUI n, String filename) {
+	public DownloadManager(NodeUI n, String f) {
 		this.nodeUI = n;
-		this.filename = filename;
+		this.filename = f;
 	}
 	
 	public void download() {
@@ -21,6 +21,7 @@ public class DownloadManager {
 			INode n = nodeUI.connectNode(nodeUI.getMachines().get(0));
 			filesize = n.getFileSize(filename);
 			offSet = 0;
+			
 			for(String s: nodeUI.getMachines()) {
 				INode ns = nodeUI.connectNode(s);
 				new Download(ns, offSet).start();
