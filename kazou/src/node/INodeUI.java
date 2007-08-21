@@ -10,5 +10,9 @@ public interface INodeUI extends Remote {
 	public void addMachines(List v) throws RemoteException;
 	
 	public void finish() throws RemoteException;
+	
+	public void downloadFile(String nome,long startOffset,int totallength, INode ns) throws RemoteException;
+	
+	public List<String> getMachines() throws RemoteException;
 
 }

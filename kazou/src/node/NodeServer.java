@@ -6,7 +6,10 @@
  */
 package node;
 
+import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -57,7 +60,7 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 	/* (non-Javadoc)
 	 * @see node.INode#getFile(java.lang.String)
 	 */
-	public String getFile(String file) throws RemoteException {
+/*	public String getFile(String file) throws RemoteException {
 		System.out.println("getFile");
 		String str = "";
 		try {
@@ -77,5 +80,62 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 		}
 		
 		return str;
+	}
+*/	
+	public byte[] getFileParts(String nome,long offset,int length){
+		
+		File f=new File(repository+File.separator+nome);
+		byte[] buffer=null;
+		
+		
+		if(offset>f.length())
+			return null;
+		
+		if(offset +length>f.length())
+			buffer=new byte[(int)(f.length()-offset)];
+		else
+		    buffer=new byte[length];
+		
+		
+		
+		DataInputStream dis=null;
+		try {
+			
+			dis=new DataInputStream(new FileInputStream(repository+File.separator+nome));
+			
+			System.out.println(dis.skip(offset));
+			
+			try {
+				dis.readFully(buffer);
+				return buffer;
+			}catch (EOFException e) {
+				System.out.println("EOF "+offset);
+				return buffer;
+			}catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * tamanho do arquivo
+	 * @param nome
+	 * @return
+	 */
+	public long getFileSize(String nome){
+		File f= new File(repository+File.separator+nome);
+		if(f.exists())
+			return f.length();
+		else 
+			return -1;
 	}
 }
