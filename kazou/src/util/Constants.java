@@ -36,6 +36,8 @@ public interface Constants {
 	public static final String SPLASH_SCREEN_TITLE = "U Share";
 	public static final String SETUP_SCREEN_TITLE = "Configurações";
 	public static final String SETUP_SCREEN_REP_LABEL= "Repositório";
+	public static final String SETUP_SCREEN_NAME_LABEL= "Nome Local";
+	public static final String SETUP_SCREEN_NAME_SERVER_LABEL= "Servidor";
 	public static final String SETUP_SCREEN_SUPERNODE_LABEL= "Supernós";
 	public static final String SETUP_SCREEN_BROWSE_LABEL = "Escolher";
 	public static final String SETUP_SCREEN_CANCEL_LABEL = "Cancel";
