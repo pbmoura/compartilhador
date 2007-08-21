@@ -20,7 +20,7 @@ public class MainFrame extends JFrame {
 		super("");
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				Controller.exit(0);
+				Controller.getInstancia().exit(0);
 			}
 		});	
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Constants.WINDOW_ICON));

@@ -12,14 +12,16 @@ import business.*;
 
 
 public class SetupScreen extends Screen implements ActionListener{
-	JTextField tfRepAddress;
+	private JTextField tfRepAddress;
+	private JTextField tfName;
+	private JTextField tfNameServer;
 	private JButton    btBrowse;
 	private JButton    btOk;
 	private JButton    btCancel;
-	private JComboBox  cbChooseSupernode;
+	//private JComboBox  cbChooseSupernode;
 	
 	private static SetupScreen instance;
-
+	private Controller controller = Controller.getInstancia();
 	
 	public static SetupScreen getInstance(MainFrame frame){
 		if (instance == null){
@@ -35,18 +37,28 @@ public class SetupScreen extends Screen implements ActionListener{
 		setupGridBagLayout();
 		
 		//Create items
-		JLabel tfLabel = new JLabel(Constants.SETUP_SCREEN_REP_LABEL);
+		UserConfig userConfig = controller.getUserConfig();
+		
+		JLabel tfRepLabel = new JLabel(Constants.SETUP_SCREEN_REP_LABEL);
 		tfRepAddress = new JTextField(10);	
-		tfRepAddress.setText(Controller.getUserRepositoryPath());
+		tfRepAddress.setText(userConfig.getRepository());
+		
+		JLabel tfNameLabel = new JLabel(Constants.SETUP_SCREEN_NAME_LABEL);
+		tfName = new JTextField(10);	
+		tfName.setText(userConfig.getName());
+		
+		JLabel tfNameServerLabel = new JLabel(Constants.SETUP_SCREEN_NAME_SERVER_LABEL);
+		tfNameServer = new JTextField(10);	
+		tfNameServer.setText(userConfig.getNameServer());
 		
 		btBrowse     = new JButton(Constants.SETUP_SCREEN_BROWSE_LABEL);		
 		btOk         = new JButton(Constants.OK_LABEL);
 		btCancel     = new JButton(Constants.SETUP_SCREEN_CANCEL_LABEL);
 		
-		JLabel cbLabel = new JLabel(Constants.SETUP_SCREEN_SUPERNODE_LABEL);		
-		cbChooseSupernode = new JComboBox();
-		ComboBoxModel cbModel = new DefaultComboBoxModel(Controller.getSuperNodeList());
-		cbChooseSupernode.setModel(cbModel);
+//		JLabel cbLabel = new JLabel(Constants.SETUP_SCREEN_SUPERNODE_LABEL);		
+//		cbChooseSupernode = new JComboBox();
+//		ComboBoxModel cbModel = new DefaultComboBoxModel(Controller.getSuperNodeList());
+//		cbChooseSupernode.setModel(cbModel);
 		
 		
 		//Handle events
@@ -55,15 +67,21 @@ public class SetupScreen extends Screen implements ActionListener{
 		btCancel.addActionListener(this);
 		
 		//Add items to pane
-		this.addToGridBag(tfLabel,0,1,1,1,0,0,GridBagConstraints.HORIZONTAL);		
+		this.addToGridBag(tfRepLabel,0,1,1,1,0,0,GridBagConstraints.HORIZONTAL);		
 		this.addToGridBag(tfRepAddress,1,1,1,1,0,0,GridBagConstraints.HORIZONTAL);
 		this.addToGridBag(btBrowse,2,1,1,1,0,0,GridBagConstraints.HORIZONTAL);
+
+		this.addToGridBag(tfNameLabel,0,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
+		this.addToGridBag(tfName,1,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
+
+		this.addToGridBag(tfNameServerLabel,0,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
+		this.addToGridBag(tfNameServer,1,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
 		
-		this.addToGridBag(cbLabel,0,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
-		this.addToGridBag(cbChooseSupernode,1,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
+//		this.addToGridBag(cbLabel,0,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
+//		this.addToGridBag(cbChooseSupernode,1,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
 		
-		this.addToGridBag(btOk,0,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
-		this.addToGridBag(btCancel,2,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
+		this.addToGridBag(btOk,0,4,1,1,0,0,GridBagConstraints.HORIZONTAL);
+		this.addToGridBag(btCancel,2,4,1,1,0,0,GridBagConstraints.HORIZONTAL);
 	}
 
 	public String getTitle(){
@@ -83,10 +101,14 @@ public class SetupScreen extends Screen implements ActionListener{
 			}
 			
 		}else if (source == btOk){
-			String text = tfRepAddress.getText();
-			if (text != null && text.trim().length()!=0){
+			//String text = tfRepAddress.getText();
+			if ( (tfRepAddress.getText() != null && tfRepAddress.getText().trim().length()!=0)
+				&&(tfName.getText() != null && tfName.getText().trim().length()!=0)
+				&&(tfNameServer.getText() != null && tfNameServer.getText().trim().length()!=0)){
 				//Configure user and goto search screen
-				Controller.configureUser(tfRepAddress.getText(),(String)cbChooseSupernode.getSelectedItem());
+				UserConfig userConfig = new UserConfig(tfName.getText(), tfNameServer.getText(), tfRepAddress.getText());
+				controller.configureUser(userConfig);
+				//Controller.configureUser(tfRepAddress.getText(),(String)cbChooseSupernode.getSelectedItem());
 				getOwner().showScreen(Constants.MANAGEMENT_SCREEN);
 			}else{
 				//mandatory field not filled
@@ -97,7 +119,7 @@ public class SetupScreen extends Screen implements ActionListener{
 			//Ignore modifications and go to former screen, or exit
 			int oldScreenID = getOwner().getOldScreenID();
 			if(oldScreenID == -1){
-				Controller.exit(0);
+				controller.exit(0);
 			}else{
 				getOwner().showScreen(oldScreenID);
 			}
@@ -108,18 +130,21 @@ public class SetupScreen extends Screen implements ActionListener{
 	public void reset() {
 		
 		//Keep the user`s repositorty path
-		tfRepAddress.setText(Controller.getUserRepositoryPath());
+		UserConfig userConfig = controller.getUserConfig();
+		tfRepAddress.setText(userConfig.getRepository());
+		tfName.setText(userConfig.getName());
+		tfNameServer.setText(userConfig.getNameServer());
 		
-		//Keep the selected supernode
-		Object selectedSupernode = cbChooseSupernode.getSelectedItem();
-		//reset supernode list		
-		Vector supernodes = Controller.getSuperNodeList();
-		ComboBoxModel cbModel = new DefaultComboBoxModel(supernodes);
-		cbChooseSupernode.setModel(cbModel);
-		
-		if (supernodes.contains(selectedSupernode)){
-			cbChooseSupernode.setSelectedItem(selectedSupernode);
-		}
+//		//Keep the selected supernode
+//		Object selectedSupernode = cbChooseSupernode.getSelectedItem();
+//		//reset supernode list		
+//		Vector supernodes = Controller.getSuperNodeList();
+//		ComboBoxModel cbModel = new DefaultComboBoxModel(supernodes);
+//		cbChooseSupernode.setModel(cbModel);
+//		
+//		if (supernodes.contains(selectedSupernode)){
+//			cbChooseSupernode.setSelectedItem(selectedSupernode);
+//		}
 	}
 	
 	public void setupSize(){
