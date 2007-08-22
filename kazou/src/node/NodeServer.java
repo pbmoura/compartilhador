@@ -83,7 +83,7 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 		
 	}
 		
-	public byte[] getFileParts(String hash,long offset,int length){
+	public byte[] getFileParts(String hash,long offset,int length) throws RemoteException{
 		String nome = filesHash.get(hash);
 		
 		File f=new File(repository+File.separator+nome);
@@ -120,6 +120,7 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new RemoteException();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
