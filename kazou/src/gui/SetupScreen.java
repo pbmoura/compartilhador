@@ -21,7 +21,7 @@ public class SetupScreen extends Screen implements ActionListener{
 	//private JComboBox  cbChooseSupernode;
 	
 	private static SetupScreen instance;
-	private Controller controller = Controller.getInstancia();
+	private Controller controller = Controller.getInstance();
 	
 	public static SetupScreen getInstance(MainFrame frame){
 		if (instance == null){
@@ -134,6 +134,12 @@ public class SetupScreen extends Screen implements ActionListener{
 		tfRepAddress.setText(userConfig.getRepository());
 		tfName.setText(userConfig.getName());
 		tfNameServer.setText(userConfig.getNameServer());
+		
+		if(getOwner().getCurrentScreenID()== Constants.MANAGEMENT_SCREEN){
+			btCancel.setVisible(false);
+		}else{
+			btCancel.setVisible(true);
+		}
 		
 //		//Keep the selected supernode
 //		Object selectedSupernode = cbChooseSupernode.getSelectedItem();

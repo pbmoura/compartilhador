@@ -20,7 +20,7 @@ public class MainFrame extends JFrame {
 		super("");
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				Controller.getInstancia().exit(0);
+				Controller.getInstance().exit(0);
 			}
 		});	
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Constants.WINDOW_ICON));
@@ -48,6 +48,10 @@ public class MainFrame extends JFrame {
 
 	public int getOldScreenID() {
 		return oldScreenID;
+	}
+
+	public int getCurrentScreenID() {
+		return currentScreenID;
 	}
 
 }
