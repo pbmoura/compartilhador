@@ -186,7 +186,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 						download(fileName, fileInfo.getHashValue());
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.err.println("Arquivo nao encontrado");
 					}
 
 				} else {
