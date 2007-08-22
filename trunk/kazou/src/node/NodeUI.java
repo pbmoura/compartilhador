@@ -237,6 +237,8 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		try {
 			File f=new File(repository+File.separator+diretorio+File.separator+diretorio+"."+offset);
 			//File f=new File(repository+File.separator+2+nome);
+			if (f.exists())
+				f.delete();
 			f.createNewFile();
 			
 			fs=new FileOutputStream(f);
