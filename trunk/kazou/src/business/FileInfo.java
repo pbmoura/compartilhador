@@ -4,21 +4,25 @@ import java.io.*;
 
 import util.MD5;
 
-public class FileInfo {
+public class FileInfo implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//These values does not change over time
-	private String filename;
+	private File file;
 	private long sizeInKB;
-	private char[] hashValue;
+	private String hashValue;
 	//These values  change over time
 	private int tranferRate;
 	private long completeKB=10;
 	
 	
-	public FileInfo(String filename) {
-		this.filename = filename;
+	public FileInfo(File file) {
+		this.file = file;
 		try{
-			this.sizeInKB = new File(filename).length()/1000; 
-			this.hashValue = MD5.encodeFile(filename);		
+			this.sizeInKB = file.length()/1000; 
+			this.hashValue = String.copyValueOf(MD5.encodeFile(file.getAbsolutePath()));		
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -28,10 +32,10 @@ public class FileInfo {
 	
 	
 	public String getFilename() {
-		return filename;
+		return file.getName();
 	}
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setFile(File file) {
+		this.file = file;
 	}
 	public long getSizeInKB() {
 		return sizeInKB;
@@ -39,10 +43,10 @@ public class FileInfo {
 	public void setSizeInKB(long sizeInKB) {
 		this.sizeInKB = sizeInKB;
 	}
-	public char[] getHashValue() {
+	public String getHashValue() {
 		return hashValue;
 	}
-	public void setHashValue(char[] hashValue) {
+	public void setHashValue(String hashValue) {
 		this.hashValue = hashValue;
 	}
 	public int getTranferRate() {
@@ -58,6 +62,10 @@ public class FileInfo {
 		this.completeKB = completeKB;
 	}
 	
-	
+	@Override
+	public String toString() {
+		
+		return this.getFilename() + " " + this.getSizeInKB() + "KB";
+	}
 	
 }

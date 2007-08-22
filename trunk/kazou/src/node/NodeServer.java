@@ -11,12 +11,19 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import util.MD5;
+
+
+import business.FileInfo;
 
 
 
@@ -30,11 +37,13 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 	
 	private String ip;
 	private String repository;
+	private Hashtable<String, String> filesHash;
 	
 	public NodeServer(String ip, String repository) throws RemoteException {
 		super();
 		this.ip = ip;
 		this.repository = repository;
+		this.filesHash = new Hashtable<String, String>();
 		init();
 	}
 	
@@ -44,6 +53,7 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 	
 	private void init () {
 		System.out.println("Imprimindo name..."+ip);
+		fillHash();
 		System.out.println("Carregando servidor de arquivos...");
 		
 		if (System.getSecurityManager() == null) {
@@ -59,7 +69,20 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 		}	
 	}
 	
-	public byte[] getFileParts(String nome,long offset,int length){
+	private void fillHash() {
+		File folder = new File(repository);
+		File [] folderList = folder.listFiles();
+		
+		
+		for (int i=0;i<folderList.length;i++) {
+			String hash = String.valueOf(MD5.encodeFile(folderList[i].getAbsolutePath()));
+			filesHash.put(hash, folderList[i].getName());
+		}
+		
+	}
+		
+	public byte[] getFileParts(String hash,long offset,int length){
+		String nome = filesHash.get(hash);
 		
 		File f=new File(repository+File.separator+nome);
 		byte[] buffer=null;
@@ -108,8 +131,9 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 	 * @param nome
 	 * @return
 	 */
-	public long getFileSize(String nome){
-		File f= new File(repository+File.separator+nome);
+	public long getFileSize(String hash){
+		String name = filesHash.get(hash);
+		File f= new File(repository+File.separator+name);
 		if(f.exists())
 			return f.length();
 		else 
