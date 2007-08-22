@@ -77,12 +77,34 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		searchFile();
 	}
 	
-	public synchronized void addMachines(List v) {
-		machines.addAll(v);
+	public synchronized void addMachines(List<String> v) {
+		for (String f: v) {
+			boolean achou = false;
+			for (String i: machines) {
+				if (f.equals(i)) {
+					achou = true;
+					break;
+				}
+			}
+			if (achou) continue;
+			machines.add(f);
+		}
+		//machines.addAll(v);
 	}
 	
-	public synchronized void addFilesInfos(List v) {
-		filesInfos.addAll(v);
+	public synchronized void addFilesInfos(List<FileInfo> v) {
+		for (FileInfo f: v) {
+			boolean achou = false;
+			for (FileInfo i: filesInfos) {
+				if (f.getHashValue().equals(i.getHashValue())) {
+					achou = true;
+					break;
+				}
+			}
+			if (achou) continue;
+			filesInfos.add(f);
+		}
+		//filesInfos.addAll(v);
 	}
 	
 	public void finish() {
