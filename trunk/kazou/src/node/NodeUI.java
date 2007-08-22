@@ -34,6 +34,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	private String repository;
 	private List<String> machines;
 	private List<FileInfo> filesInfos;
+	private NodeServer nodeServer;
 	File folder;
 	
 	public NodeUI(String ip, String superNodeIP, String repository) throws RemoteException {
@@ -158,6 +159,9 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		machines.clear();
 		superNode.searchFileByHash(hash, ip);
 		new DownloadManager(this, name, hash).download();
+		
+		
+		
 	}
 	
 	private void searchFile() {
@@ -519,8 +523,28 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		for(File file: dir.listFiles()) 
 			file.delete();
 		dir.delete();
-		// ANTIGO
+		
+		File f = new File(repository + File.separator  + nome);
+		FileInfo i = new FileInfo(f);
+		Hashtable t = new Hashtable<String, FileInfo>();
+		t.put(nome, i);
+		try {
+			nodeServer.fillHash();
+			superNode.setNode(ip, t);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return null;
+	}
+
+	public NodeServer getNodeServer() {
+		return nodeServer;
+	}
+
+	public void setNodeServer(NodeServer nodeServer) {
+		this.nodeServer = nodeServer;
 	}
 
 }
