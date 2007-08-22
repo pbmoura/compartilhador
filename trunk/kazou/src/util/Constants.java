@@ -27,10 +27,12 @@ public interface Constants {
 	
 	/* General screen labels */
 	public static final String OK_LABEL = "OK";
+	public static final String APPLY_LABEL = "Aplicar";
 	public static final String FIELD_NOT_FILLED_LABEL = "Campo obrigatório não preenchido";
 	public static final String WINDOW_ICON = "window_ico.png";
 	public static final String WINDOW_SPLASH = "SplashImage.jpg";
 	public static final String WARNING_LABEL = "Aviso";
+	public static final String ERROR_LABEL = "Erro";
 	
 	/* Screen labels */
 	public static final String SPLASH_SCREEN_TITLE = "U Share";

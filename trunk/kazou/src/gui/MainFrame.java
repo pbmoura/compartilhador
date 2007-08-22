@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import business.Controller;
 import util.Constants;
@@ -52,6 +53,11 @@ public class MainFrame extends JFrame {
 
 	public int getCurrentScreenID() {
 		return currentScreenID;
+	}
+
+	public static void showException(String exception) {
+		JOptionPane.showMessageDialog(null, exception,Constants.ERROR_LABEL, JOptionPane.ERROR_MESSAGE);
+		Controller.getInstance().exit(1);
 	}
 
 }

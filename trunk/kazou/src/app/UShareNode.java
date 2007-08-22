@@ -2,10 +2,10 @@ package app;
 
 import business.Controller;
 
-public class UShare {
+public class UShareNode {
 
 	public static void main(String[] args) {
-		Controller.getInstance().init();
+		Controller.getInstance().initNode(args);
 	}
 
 }

@@ -8,12 +8,18 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Vector;
 
+import node.Node;
+
+
+
+import supernode.SuperNode;
 import util.Constants;
 
 public class Controller {
 	
 	private static Controller instance = null;
 	private Properties properties = null;
+	private MainFrame frame;
 	
 	private Controller() {
 		
@@ -26,19 +32,23 @@ public class Controller {
 		return instance;
 	}
 	
-//	public static void main(String args[]){
-//		//TODO:check the place of this main()
-//		init();		
-//	}
+	public void initNode(String args[]){
+		try{
+			properties = new Properties();
+			Node.init(args);			
+			initGUI();
+		}catch(IOException ioe){
+			MainFrame.showException(ioe.getMessage());
+		}
+	}
 	
-	public void init(){
-		properties = new Properties();
-		initGUI();	
+	public void initSuperNode(String args[]){
+		SuperNode.init(args);	
 	}
 
 	private void initGUI(){
-		MainFrame frame = new MainFrame();
-		frame.showScreen(Constants.SPLASH_SCREEN);	
+		this.frame = new MainFrame();
+		this.frame.showScreen(Constants.SPLASH_SCREEN);	
 	}
 	
 //	public static Vector getSuperNodeList() {

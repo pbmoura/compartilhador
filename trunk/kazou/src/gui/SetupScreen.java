@@ -109,7 +109,9 @@ public class SetupScreen extends Screen implements ActionListener{
 				UserConfig userConfig = new UserConfig(tfName.getText(), tfNameServer.getText(), tfRepAddress.getText());
 				controller.configureUser(userConfig);
 				//Controller.configureUser(tfRepAddress.getText(),(String)cbChooseSupernode.getSelectedItem());
-				getOwner().showScreen(Constants.MANAGEMENT_SCREEN);
+				if(getOwner().getCurrentScreenID()!= Constants.MANAGEMENT_SCREEN){
+					getOwner().showScreen(Constants.MANAGEMENT_SCREEN);
+				}
 			}else{
 				//mandatory field not filled
 				JOptionPane.showMessageDialog(null,Constants.FIELD_NOT_FILLED_LABEL,Constants.WARNING_LABEL,JOptionPane.WARNING_MESSAGE);
@@ -137,8 +139,10 @@ public class SetupScreen extends Screen implements ActionListener{
 		
 		if(getOwner().getCurrentScreenID()== Constants.MANAGEMENT_SCREEN){
 			btCancel.setVisible(false);
+			btOk.setText(Constants.APPLY_LABEL);
 		}else{
 			btCancel.setVisible(true);
+			btOk.setText(Constants.OK_LABEL);
 		}
 		
 //		//Keep the selected supernode
