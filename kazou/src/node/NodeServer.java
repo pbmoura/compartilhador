@@ -69,10 +69,10 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 		}	
 	}
 	
-	private void fillHash() {
+	public void fillHash() {
 		File folder = new File(repository);
 		File [] folderList = folder.listFiles();
-		
+		filesHash.clear();
 		
 		for (int i=0;i<folderList.length;i++) {
 			if (!folderList[i].isDirectory()) {

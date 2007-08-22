@@ -22,6 +22,7 @@ public class Node {
 		try {
 			nodeServer = new NodeServer(ip, repository);
 			nodeUI = new NodeUI(ip, nameServerIP, repository);
+			nodeUI.setNodeServer(nodeServer);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
