@@ -1,5 +1,6 @@
 package node;
 
+import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class DownloadManager {
 		this.hashCode = hash;
 	}
 	
-	public void download() {
+	public void download() throws FileNotFoundException {
 		try {
 			//for(int i=0;i<)
 			List<String> nodes = nodeUI.getMachines();
@@ -63,6 +64,7 @@ public class DownloadManager {
 			
 		} catch(Exception e) {
 			System.err.println("Erro no download: " + e.getMessage());
+			throw new FileNotFoundException();
 		}
 	}
 	

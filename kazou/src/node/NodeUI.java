@@ -155,7 +155,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		superNode.searchFileByName(name, ip);
 	}
 	
-	public void download(String name, String hash) throws RemoteException {
+	public void download(String name, String hash) throws RemoteException, FileNotFoundException {
 		machines.clear();
 		superNode.searchFileByHash(hash, ip);
 		new DownloadManager(this, name, hash).download();
@@ -182,7 +182,12 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 					System.out.println(filesInfos);
 					int choice = IO.readInt();
 					FileInfo fileInfo = filesInfos.get(choice);
-					download(fileName, fileInfo.getHashValue());
+					try {
+						download(fileName, fileInfo.getHashValue());
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 				} else {
 					System.out.println("Arquivo nao encontrado");

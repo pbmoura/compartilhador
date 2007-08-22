@@ -37,12 +37,14 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 	
 	private String ip;
 	private String repository;
+	private File directory;
 	private Hashtable<String, String> filesHash;
 	
 	public NodeServer(String ip, String repository) throws RemoteException {
 		super();
 		this.ip = ip;
 		this.repository = repository;
+		this.directory = new File(repository);
 		this.filesHash = new Hashtable<String, String>();
 		init();
 	}
@@ -55,6 +57,7 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 		System.out.println("Imprimindo name..."+ip);
 		fillHash();
 		System.out.println("Carregando servidor de arquivos...");
+		new DirectoryListener().start();
 		
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new RMISecurityManager());
@@ -69,13 +72,14 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 		}	
 	}
 	
-	public void fillHash() {
-		File folder = new File(repository);
-		File [] folderList = folder.listFiles();
+	public synchronized void fillHash() {
+		//File folder = new File(repository);
+		File [] folderList = directory.listFiles();
 		filesHash.clear();
 		
 		for (int i=0;i<folderList.length;i++) {
 			if (!folderList[i].isDirectory()) {
+				System.out.println("adicionau " + folderList[i].getName());
 				String hash = String.valueOf(MD5.encodeFile(folderList[i].getAbsolutePath()));
 				filesHash.put(hash, folderList[i].getName());
 			}
@@ -141,5 +145,26 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 			return f.length();
 		else 
 			return -1;
+	}
+	
+	class DirectoryListener extends Thread {
+		
+		public void run() {
+			int fileNumber = directory.list().length;
+			while (true) {
+				try{ 
+					Thread.sleep(1000); 
+					String[] fileList = directory.list(); 
+					if (fileNumber != fileList.length){ 
+					fillHash(); 
+					fileNumber = fileList.length; 
+					} 
+					}catch(InterruptedException ie){ 
+						
+					}
+			}
+			
+		}
+		
 	}
 }
