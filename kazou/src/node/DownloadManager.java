@@ -27,8 +27,16 @@ public class DownloadManager {
 	
 	public void download() {
 		try {
-			INode n = nodeUI.connectNode(nodeUI.getMachines().get(0));
-			filesize = n.getFileSize(hashCode);
+			//for(int i=0;i<)
+			List<String> nodes = nodeUI.getMachines();
+			for (String node: nodes) {
+				INode n = nodeUI.connectNode(node);
+				filesize = n.getFileSize(hashCode);
+				if (filesize > -1) break;
+			}
+			//INode n = nodeUI.connectNode(nodeUI.getMachines().get(0));
+			//filesize = n.getFileSize(hashCode);
+			
 			offSet = 0;
 			
 			downloading = new Vector<Long>();
@@ -68,9 +76,10 @@ public class DownloadManager {
 				System.err.println("nao tem mais ninguem...");
 		}
 		else
-			if (!missing.isEmpty())
+			if (!missing.isEmpty()) {
+				downloading.add(missing.getFirst());
 				new Download(ns, missing.removeFirst()).start();
-			else
+			} else
 				if (downloading.isEmpty()){
 					// ANTIGO this.nodeUI.makeFile(this.filename);
 					System.out.println("chamando o makefile");
@@ -101,8 +110,10 @@ public class DownloadManager {
 		public void run() {
 			
 			try {
-				nodeUI.downloadFile(filename, hashCode, offset, packetLength, node);
-				completed(node, offset, true);
+				boolean test=nodeUI.downloadFile(filename, hashCode, offset, packetLength, node);
+				completed(node, offset, test);
+				
+				
 			} catch (RemoteException e) {
 				completed(node, offset, false);
 			}

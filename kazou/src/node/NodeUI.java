@@ -239,12 +239,16 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
     	}
     }
 
-	public void downloadFile(String nome, String hash, long startOffset,int totallength, INode ns) throws RemoteException {
+	public boolean downloadFile(String nome, String hash, long startOffset,int totallength, INode ns) throws RemoteException {
 		
 		// Criar um diretorio para conter os downloads do arquivo
 		String diretorio=nome.replace('.','_');
 		File dir=new File(repository+File.separator+diretorio);
 		long size=ns.getFileSize(hash);
+		// caso o No nao possua mais o arquivo
+		if(size<0)
+			return false;
+		
 		//long hashcode=ns.getFileHash(nome);
 		
 		if(!dir.exists()){
@@ -256,7 +260,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 				fs=new FileOutputStream(f);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-				return;
+				return false;
 			}
 			try {
 				fs.write(("size="+size).getBytes());
@@ -291,11 +295,11 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 			fs=new FileOutputStream(f);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			return;
+			return false;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return;
+			return false;
 		}
 		
 		DataOutputStream dos=new DataOutputStream(fs);
@@ -319,6 +323,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 				
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				//throw new RemoteException();
 				break;
 			}
 		}
@@ -329,6 +334,18 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		/*File f=new File(repository+File.separator+diretorio+File.separator+diretorio+"."+offset);
+		if(f.length()==totallength)	
+			return true;
+		else if((offset+totallength)>size){
+			long tamanho= size-(offset);
+			if(f.length()==tamanho)
+				return true;
+			else 
+				return false;
+		}else 
+			return false;*/
+		return true;
 		
 	}
 	
