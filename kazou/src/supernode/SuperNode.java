@@ -122,7 +122,7 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
     	return sn;
 	}
 	
-	public static void init(String[] args) {
+	public static void main(String[] args) {
 		try {
 			new SuperNode(args[0],args[1], args[2]);
 		} catch (RemoteException e) {
