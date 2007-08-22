@@ -2,10 +2,10 @@ package app;
 
 import business.Controller;
 
-public class Kazou {
+public class UShare {
 
 	public static void main(String[] args) {
-		Controller.getInstancia().init();
+		Controller.getInstance().init();
 	}
 
 }

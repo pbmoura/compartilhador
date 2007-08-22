@@ -16,7 +16,7 @@ public class ManagementScreen extends Screen {
 	private ManagementScreen(MainFrame frame){
 		super(frame);
 		setupTabbedPane();
-		
+		reset();
 		addTab(SearchScreen.getInstance(frame));		
 		addTab(TransferScreen.getInstance(frame));
 		addTab(SetupScreen.getInstance(frame));

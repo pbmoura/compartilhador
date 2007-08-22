@@ -12,18 +12,18 @@ import util.Constants;
 
 public class Controller {
 	
-	private static Controller instancia = null;
+	private static Controller instance = null;
 	private Properties properties = null;
 	
 	private Controller() {
 		
 	}
 	
-	public static Controller getInstancia() {
-		if(instancia == null) {
-			instancia = new Controller();
+	public static Controller getInstance() {
+		if(instance == null) {
+			instance = new Controller();
 		}
-		return instancia;
+		return instance;
 	}
 	
 //	public static void main(String args[]){
