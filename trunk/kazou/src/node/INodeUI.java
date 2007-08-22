@@ -3,13 +3,14 @@ package node;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Vector;
+
+import business.FileInfo;
 
 public interface INodeUI extends Remote {
 	
-	public void addMachines(List v) throws RemoteException;
+	public void addMachines(List<String> v) throws RemoteException;
 	
-	public void addFilesInfos(List v) throws RemoteException;
+	public void addFilesInfos(List<FileInfo> v) throws RemoteException;
 	
 	public void finish() throws RemoteException;
 	
