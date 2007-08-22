@@ -224,15 +224,14 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 			String address = (String)v.get(i);
 			if (!address.equalsIgnoreCase(this.name)) {
 				System.out.println("Estou procurando em :"+address);
-				ISuperNode sn = connectToSuperNode(address);
-				if (sn!=null){
-					System.out.println("SN não eh nulo: "+address);
-					sn.searchFileByHash(hash, name);
-					/*List c = sn.getFileNodes(file);
-					if (c!=null) {
-						//machines.addAll(c);
-						getNodeUI(name).addMachines((List)c);
-					}*/
+				try {
+					ISuperNode sn = connectToSuperNode(address);
+					if (sn!=null){
+						System.out.println("SN não eh nulo: "+address);
+						sn.searchFileByHash(hash, name);
+					}
+				} catch (RemoteException e) {
+					System.err.println("nao consegui buscar em " + address);
 				}
 			}
 		}
@@ -264,11 +263,15 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 			String address = (String)v.get(i);
 			if (!address.equalsIgnoreCase(this.name)) {
 				System.out.println("Estou procurando em :"+address);
-				ISuperNode sn = connectToSuperNode(address);
-				if (sn!=null){
-					System.out.println("SN não eh nulo: "+address);
-					sn.searchFileByName(file, name);
-
+				try {
+					ISuperNode sn = connectToSuperNode(address);
+					if (sn!=null){
+						System.out.println("SN não eh nulo: "+address);
+						sn.searchFileByName(file, name);
+	
+					}
+				} catch(RemoteException e) {
+					System.err.println("nao consegui buscar em " + address);
 				}
 			}
 		}
