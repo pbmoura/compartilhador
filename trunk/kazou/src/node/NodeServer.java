@@ -75,8 +75,10 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 		
 		
 		for (int i=0;i<folderList.length;i++) {
-			String hash = String.valueOf(MD5.encodeFile(folderList[i].getAbsolutePath()));
-			filesHash.put(hash, folderList[i].getName());
+			if (!folderList[i].isDirectory()) {
+				String hash = String.valueOf(MD5.encodeFile(folderList[i].getAbsolutePath()));
+				filesHash.put(hash, folderList[i].getName());
+			}
 		}
 		
 	}

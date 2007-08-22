@@ -100,7 +100,8 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		List<File> folderListAux = new ArrayList<File>();
 		
 		for (int i=0;i<folderList.length;i++) {
-			folderListAux.add(folderList[i]);
+			if(!folderList[i].isDirectory())
+				folderListAux.add(folderList[i]);
 		}
 		
 		try {
