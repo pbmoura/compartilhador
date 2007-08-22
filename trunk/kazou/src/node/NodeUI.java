@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
+import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
@@ -242,9 +244,28 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		// Criar um diretorio para conter os downloads do arquivo
 		String diretorio=nome.replace('.','_');
 		File dir=new File(repository+File.separator+diretorio);
+		long size=ns.getFileSize(hash);
+		//long hashcode=ns.getFileHash(nome);
 		
 		if(!dir.exists()){
+			 // ANTIGO dir.mkdir();
 			dir.mkdir();
+			File f=new File(repository+File.separator+diretorio+File.separator+"file.properties");
+			FileOutputStream fs=null;
+			try {
+				fs=new FileOutputStream(f);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return;
+			}
+			try {
+				fs.write(("size="+size).getBytes());
+			//	fs.write(("\nhash="+hashcode).getBytes());
+			//	fs.write(("\nnome="+nome).getBytes());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		// Cada pacote tera 1KB de dados
@@ -317,12 +338,26 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	 * juntado em partes
 	 * @param nome
 	 */
-	public void makeFile(String nome){
+	public Vector makeFile(String nome){
 		String diretorio=nome.replace('.','_');
 		
 		File dir=new File(repository+File.separator+diretorio);
 		
-		String[] files = dir.list();
+	    // ANTIGO String[] files = dir.list();
+		
+		String[] files2 = dir.list();
+		if(files2==null || files2.length<2){
+			System.out.println("Nao tem arquivo");
+			return new Vector();
+		}
+			
+		String[] files=new String[files2.length-1];
+		int aux=0;
+		for(int i=0;i<files2.length;i++)
+			if(files2[i].equals("file.properties"))
+			;
+			else 
+				files[aux++]=files2[i];
 		
 		// Variavel usada para ordenar os arquivos em ordem alfabetica
 		long[] alfa=new long[files.length];
@@ -362,8 +397,48 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 			
 				
 		}
+		/***********/
 		
+		try{
+			File f=new File(repository+File.separator+diretorio+File.separator+"file.properties");
+			DataInputStream prop= new DataInputStream(new FileInputStream(f));
+			Properties props=new Properties();
+			props.load(prop);
+			long siz=Long.parseLong((String)props.get("size"));
+			if(!(totalSize>=siz)){
+							
+				// fazer download das partes novamente
+				long stopPoint=0;
+				Vector v=new Vector<Long>();
+				for(int i=0;i<ord.length;i++){
+					File f2=new File(repository+File.separator+diretorio+File.separator+files[ord[i]]);
+					if(stopPoint==beta[ord[i]]){
+						stopPoint+=f2.length();
+					}else{
+						v.add((Long)stopPoint);
+						v.add((Long)beta[ord[i]]);
+						stopPoint+=beta[ord[i]];
+					}
+					
+				}
+				if(stopPoint!=siz){
+					v.add((Long)stopPoint);
+				    v.add((Long)siz);
+				}
+				// Arquivo nao completo
+				if(v.size()>0){
+					return v;
+				}
+			}
+				
 		
+		}catch (Exception e) {
+			// TODO: handle exception
+			return new Vector();
+			
+		}
+		
+		/***********/
 		//Juntando as partes do arquivo
 		
 		FileOutputStream fs=null;
@@ -374,11 +449,11 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 			fs=new FileOutputStream(f);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			return;
+			return new Vector();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return;
+			return new Vector();
 		}
 		
 		DataOutputStream dos=new DataOutputStream(fs);
@@ -427,7 +502,8 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		for(File file: dir.listFiles()) 
 			file.delete();
 		dir.delete();
-		
+		// ANTIGO
+		return null;
 	}
 
 }
