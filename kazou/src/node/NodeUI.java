@@ -14,11 +14,14 @@ import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import supernode.ISuperNode;
+import business.FileInfo;
 
 public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	
@@ -28,6 +31,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	private String superNodeIP;
 	private String repository;
 	private List<String> machines;
+	private List<FileInfo> filesInfos;
 	File folder;
 	
 	public NodeUI(String ip, String superNodeIP, String repository) throws RemoteException {
@@ -35,7 +39,8 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		this.ip = ip;
 		this.superNodeIP = superNodeIP;
 		this.repository = repository;
-		this.machines = new ArrayList();
+		this.machines = new ArrayList<String>();
+		this.filesInfos = new ArrayList<FileInfo>();
 		init();
 	}
 	
@@ -58,6 +63,11 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		return machines;
 	}
 	
+	public List<FileInfo> getFilesInfos() {
+		return filesInfos;
+	}
+
+	
 	public void run() {
 		//retorna super no
 		System.out.println("NSNAME eh: "+this.superNodeIP);
@@ -71,6 +81,10 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		machines.addAll(v);
 	}
 	
+	public synchronized void addFilesInfos(List v) {
+		filesInfos.addAll(v);
+	}
+	
 	public void finish() {
 		
 	}
@@ -81,54 +95,70 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	 */
 	private void insertClient() {
 		folder = new File(repository);
-		String [] folderList = folder.list();
+		File [] folderList = folder.listFiles();
 		
-		List<String> folderListAux = new ArrayList<String>();
+		List<File> folderListAux = new ArrayList<File>();
 		
 		for (int i=0;i<folderList.length;i++) {
 			folderListAux.add(folderList[i]);
 		}
 		
 		try {
-			superNode.setNode(this.ip, folderListAux);
+			superNode.setNode(this.ip, geraFileHashTable(folderListAux));
 		} catch(RemoteException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private Hashtable geraFileHashTable(List<File> folderListAux) {
+		Hashtable<String, FileInfo> hashMd5 = new Hashtable<String, FileInfo>();
+		for (Iterator iterator = folderListAux.iterator(); iterator.hasNext();) {
+			File file = (File) iterator.next();
+			hashMd5.put(file.getName(), new FileInfo(file));
+			
+		}
+		return hashMd5;
 	}
 	
 	public void disconnect(){
 		
 	}
 	
-	private void searchFile () {
+	private void searchFile() {
 		while (true) {
 			System.out.println("Digite o nome do arquivo");
 			String fileName = IO.readStr();
-			
-			if (fileName.equals("") || fileName==null){
+
+			if (fileName.equals("") || fileName == null) {
 				disconnect();
 				System.exit(0);
-			
+
 			}
-			
-			machines.clear();
-			getAddressVector(fileName);
-			
-			if (machines!=null && !machines.isEmpty()) {
-				System.out.println(machines);
-				int choice = IO.readInt();
-				connectNode(machines.get(choice));
-				new DownloadManager(this, fileName).download();
-				
-				/*try {
-					String file = node.getFile(str);
-					writeFile(str, file);
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}*/
-				
-			} else {
-				System.out.println("Arquivo nao encontrado");
+
+			filesInfos.clear();
+			try {
+				superNode.searchFileByName(fileName, ip);
+
+				if (filesInfos != null && !filesInfos.isEmpty()) {
+					System.out.println(filesInfos);
+					int choice = IO.readInt();
+					FileInfo fileInfo = filesInfos.get(choice);
+					machines.clear();
+					superNode.searchFileByHash(fileInfo.getHashValue(), ip);
+					new DownloadManager(this, fileName, fileInfo.getHashValue()).download();
+
+					/*
+					 * try { String file = node.getFile(str); writeFile(str,
+					 * file); } catch (RemoteException e) { e.printStackTrace(); }
+					 */
+
+				} else {
+					System.out.println("Arquivo nao encontrado");
+				}
+
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			node = null;
 		}
@@ -143,18 +173,6 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
         } catch (IOException e) {
             System.err.println("Erro ao gravar arquivo");
         }
-	}
-	
-	private List getAddressVector (String file) {
-		List v = null;
-		
-		try {
-			v = superNode.searchFile(file, ip);
-			
-		} catch (RemoteException re) {
-			re.printStackTrace();
-		}
-		return v;
 	}
 	
 	INode connectNode(String server) {
@@ -193,7 +211,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
     	}
     }
 
-	public void downloadFile(String nome,long startOffset,int totallength, INode ns) throws RemoteException {
+	public void downloadFile(String nome, String hash, long startOffset,int totallength, INode ns) throws RemoteException {
 		
 		// Criar um diretorio para conter os downloads do arquivo
 		String diretorio=nome.replace('.','_');
@@ -239,7 +257,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 			
 			byte[] buffer;
 			
-			buffer=ns.getFileParts(nome,offset,length);
+			buffer=ns.getFileParts(hash,offset,length);
 			
 			if(buffer==null)
 				break;
