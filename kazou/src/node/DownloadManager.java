@@ -59,7 +59,7 @@ public class DownloadManager {
 	}
 	
 	
-	void completed(INode ns, long offset, boolean ok) {
+	synchronized void completed(INode ns, long offset, boolean ok) {
 		downloading.remove(offset);
 		if (!ok) {
 			missing.addLast(offset);
@@ -71,8 +71,16 @@ public class DownloadManager {
 			if (!missing.isEmpty())
 				new Download(ns, missing.removeFirst()).start();
 			else
-				if (downloading.isEmpty())
-					this.nodeUI.makeFile(this.filename);
+				if (downloading.isEmpty()){
+					// ANTIGO this.nodeUI.makeFile(this.filename);
+					System.out.println("chamando o makefile");
+					Vector<Long> v=this.nodeUI.makeFile(this.filename);
+					if(v==null){
+						System.out.println("sucesso");
+					}else if(v.size()==0){
+						
+					}else ;// dar download novamente
+				}
 					
 		/*if (offset < filesize) {
 			new Download(ns, offSet).start();
