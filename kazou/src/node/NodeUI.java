@@ -125,6 +125,17 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		
 	}
 	
+	public void search(String name) throws RemoteException {
+		filesInfos.clear();
+		superNode.searchFileByName(name, ip);
+	}
+	
+	public void download(String name, String hash) throws RemoteException {
+		machines.clear();
+		superNode.searchFileByHash(hash, ip);
+		new DownloadManager(this, name, hash).download();
+	}
+	
 	private void searchFile() {
 		while (true) {
 			System.out.println("Digite o nome do arquivo");
@@ -136,22 +147,14 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 
 			}
 
-			filesInfos.clear();
 			try {
-				superNode.searchFileByName(fileName, ip);
+				search(fileName);
 
 				if (filesInfos != null && !filesInfos.isEmpty()) {
 					System.out.println(filesInfos);
 					int choice = IO.readInt();
 					FileInfo fileInfo = filesInfos.get(choice);
-					machines.clear();
-					superNode.searchFileByHash(fileInfo.getHashValue(), ip);
-					new DownloadManager(this, fileName, fileInfo.getHashValue()).download();
-
-					/*
-					 * try { String file = node.getFile(str); writeFile(str,
-					 * file); } catch (RemoteException e) { e.printStackTrace(); }
-					 */
+					download(fileName, fileInfo.getHashValue());
 
 				} else {
 					System.out.println("Arquivo nao encontrado");
