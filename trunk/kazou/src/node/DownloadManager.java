@@ -63,7 +63,7 @@ public class DownloadManager {
 			}*/
 			
 		} catch(Exception e) {
-			System.err.println("Erro no download: " + e.getMessage());
+			//System.err.println("Erro no download: " + e.getMessage());
 			throw new FileNotFoundException();
 		}
 	}
