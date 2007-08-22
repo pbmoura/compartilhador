@@ -2,14 +2,14 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import util.Constants;
+import business.Controller;
 
 public class SplashScreen extends Screen {
 
@@ -61,8 +61,14 @@ public class SplashScreen extends Screen {
 		}
 		public void run(){	
 			screen.getOwner().dispose();
-			screen.getOwner().setUndecorated(false);			
-			screen.getOwner().showScreen(Constants.SETUP_SCREEN);
+			screen.getOwner().setUndecorated(false);
+			
+			if (Controller.getInstance().getUserConfig().getName().length()==0){
+				//choose architecture, for first run
+				screen.getOwner().showScreen(Constants.CHOOSEARCH_SCREEN);
+			}else {
+				screen.getOwner().showScreen(Constants.MANAGEMENT_SCREEN);	
+			}
 		}
 	} 
 

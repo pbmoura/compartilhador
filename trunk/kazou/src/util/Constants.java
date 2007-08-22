@@ -7,6 +7,9 @@ public interface Constants {
 	public static final int SPLASH_SCREEN_WIDTH = 300;
 	public static final int SPLASH_SCREEN_HEIGHT = 300;
 	
+	public static final int CHOOSEARCH_SCREEN_WIDTH = 300;
+	public static final int CHOOSEARCH_SCREEN_HEIGHT = 200;
+	
 	public static final int SETUP_SCREEN_WIDTH = 300;
 	public static final int SETUP_SCREEN_HEIGHT = 200;
 	
@@ -20,8 +23,9 @@ public interface Constants {
 	
 	/* Screen IDs */
 	public static final int SPLASH_SCREEN=-1;
-	public static final int SETUP_SCREEN=0;
-	public static final int MANAGEMENT_SCREEN=1;
+	public static final int CHOOSEARCH_SCREEN=0;
+	public static final int SETUP_SCREEN=1;
+	public static final int MANAGEMENT_SCREEN=2;
 //	public static final int SEARCH_SCREEN=1;
 //	public static final int TRANSFER_SCREEN=2;
 	
@@ -36,6 +40,7 @@ public interface Constants {
 	
 	/* Screen labels */
 	public static final String SPLASH_SCREEN_TITLE = "U Share";
+	public static final String CHOOSEARCH_SCREEN_TITLE = "Escolha sua arquitetura";
 	public static final String SETUP_SCREEN_TITLE = "Configurações";
 	public static final String SETUP_SCREEN_REP_LABEL= "Repositório";
 	public static final String SETUP_SCREEN_NAME_LABEL= "Nome Local";
