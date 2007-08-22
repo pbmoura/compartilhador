@@ -2,16 +2,15 @@ package business;
 
 import gui.MainFrame;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Properties;
 import java.util.Vector;
 
 import node.Node;
-
-
-
 import supernode.SuperNode;
 import util.Constants;
 
@@ -43,7 +42,12 @@ public class Controller {
 	}
 	
 	public void initSuperNode(String args[]){
-		SuperNode.init(args);	
+		try {
+			new SuperNode(args[0],args[1], args[2]);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 
 	private void initGUI(){
@@ -90,9 +94,9 @@ public class Controller {
 
 	public Vector searchFile(String fileName) {
 		Vector v = new Vector();
-		v.add(new FileInfo("policy"));
-		v.add(new FileInfo("SplashImage.jpg"));
-		v.add(new FileInfo("window_ico.png"));
+		v.add(new FileInfo(new File("policy")));
+		v.add(new FileInfo(new File("SplashImage.jpg")));
+		v.add(new FileInfo(new File("window_ico.png")));
 		
 		return v;
 		
@@ -103,9 +107,9 @@ public class Controller {
 	}
 	public Vector getCurrentDownloads() {
 		Vector v = new Vector();
-		v.add(new FileInfo("policy"));
-		v.add(new FileInfo("SplashImage.jpg"));
-		v.add(new FileInfo("window_ico.png"));
+		v.add(new FileInfo(new File("policy")));
+		v.add(new FileInfo(new File("SplashImage.jpg")));
+		v.add(new FileInfo(new File("window_ico.png")));
 		
 		return v;
 	}
