@@ -7,17 +7,21 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
 import node.Node;
+import node.NodeUI;
 import supernode.SuperNode;
 import util.Constants;
+import util.Net;
 
 public class Controller {
 	
 	private static Controller instance = null;
 	private Properties properties = null;
+	private NodeUI nodeUI = null;
 	private MainFrame frame;
 	
 	private Controller() {
@@ -34,6 +38,8 @@ public class Controller {
 	public void initNode(String args[]){
 		try{
 			properties = new Properties();
+			String ip = Net.getLocalIPAddress();
+			nodeUI = new NodeUI(ip,args[0],args[1]);
 			Node.init(args);			
 			initGUI();
 		}catch(IOException ioe){
@@ -94,16 +100,31 @@ public class Controller {
 
 	public Vector searchFile(String fileName) {
 		Vector v = new Vector();
-		v.add(new FileInfo(new File("policy")));
-		v.add(new FileInfo(new File("SplashImage.jpg")));
-		v.add(new FileInfo(new File("window_ico.png")));
+		try {			
+			nodeUI.search(fileName);
+			List<FileInfo> result = nodeUI.getFilesInfos();
+			for (FileInfo fileInfo : result) {
+				v.add(fileInfo);
+			}
+			
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	
+//		v.add(new FileInfo(new File("policy")));
+//		v.add(new FileInfo(new File("SplashImage.jpg")));
+//		v.add(new FileInfo(new File("window_ico.png")));
 		
 		return v;
 		
 	}
-	public void startDownload(Object hash) {
+	public void startDownload(String name, String hash) {
 		System.out.println("Controler.startDownload()");
-		
+		try {
+			nodeUI.download(name, hash);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 	public Vector getCurrentDownloads() {
 		Vector v = new Vector();
