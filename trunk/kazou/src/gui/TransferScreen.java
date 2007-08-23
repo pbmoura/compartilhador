@@ -65,7 +65,7 @@ public class TransferScreen extends Screen implements Runnable, ActionListener {
 		downloadTable.setModel(dtModel);
 		addToGridBag(downloadTable.getTableHeader(), 0, 0, 1, 1, 0.7,0.1, GridBagConstraints.BOTH);
 		addToGridBag(downloadTable,0,1,1,GridBagConstraints.REMAINDER,0.7,1,GridBagConstraints.BOTH);
-		
+		addToGridBag(new JProgressBar(0,100),1,2,1,1,0.3,0,GridBagConstraints.HORIZONTAL);
 		//Fill with the tranfers
 		List<DownloadManager> downloads = Controller.getInstance().getCurrentDownloads();
 		for (int i=0;i<downloads.size();i++){
