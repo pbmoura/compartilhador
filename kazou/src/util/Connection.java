@@ -56,7 +56,8 @@ public class Connection {
 					
 					sNode = (ISuperNode) Naming.lookup(supNode);
 					System.out.println("Conectado a " + ip);
-					writeIpsSuperNode(sNode.getSuperNodes());
+					this.name = ip;
+					updateIpListFile(sNode.getSuperNodes());
 					break;
 					
 				} catch (Exception e) {
@@ -113,42 +114,35 @@ public class Connection {
 		}
 	}
 
-	public void writeIpsSuperNode(List<String> list) throws IOException {
+	public void updateIpListFile(List<String> superNodeIpList) throws IOException {
 		FileOutputStream output = new FileOutputStream(sourceFile);
+		List<String> newIpList = new ArrayList<String>();
 		
-		List<String> ipsAux = ips.subList(0, ips.size());
+		newIpList.add(this.name);
 		
-		list.add(0, ipsAux.get(count));
+		for (String s : superNodeIpList) {
+			if (superNodeIpList.indexOf(s) < MAX_SIZE_LIST &&
+					!newIpList.contains(s))
+				newIpList.add(s);
+		}
 		
-		for(String s: ipsAux) {
-			for(String t: list) {
-				if (s.equals(t)) {
-					ipsAux.remove(s);
-					break;
-				}
+		if (newIpList.size() < MAX_SIZE_LIST) {
+			for (String s : this.ips) {
+				if (this.ips.indexOf(s) < MAX_SIZE_LIST && 
+						!newIpList.contains(s))
+					newIpList.add(s);
 			}
 		}
 		
-		list.addAll(ipsAux);
+		String outputString = "";
 		
-		if(list.size() > 20)
-			ipsAux = list.subList(0, MAX_SIZE_LIST-1);
-		else
-			ipsAux.addAll(list);
-		
-		String aux = "";
-		
-		for (String ip : ipsAux) {
-			aux = aux + ip + "\n";
+		for (String ip : newIpList) {
+			outputString += ip + "\n";
 		}
 		
-		output.write(aux.getBytes(), 0, aux.getBytes().length);
+		output.write(outputString.getBytes(), 0, outputString.getBytes().length);
 		output.flush();
 		output.close();
-	}
-     
-	public void removeIp(String ip ){
-		ips.remove(ip);
 	}
 	
 }
