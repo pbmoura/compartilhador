@@ -183,7 +183,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 					int choice = IO.readInt();
 					FileInfo fileInfo = filesInfos.get(choice);
 					try {
-						download(fileName, fileInfo.getHashValue());
+						download(fileInfo.getFilename(), fileInfo.getHashValue());
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						System.err.println("Arquivo nao encontrado");
@@ -431,6 +431,8 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 			Properties props=new Properties();
 			props.load(prop);
 			long siz=Long.parseLong((String)props.get("size"));
+			prop.close();
+			
 			if(!(totalSize>=siz)){
 							
 				// fazer download das partes novamente
@@ -470,6 +472,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		FileOutputStream fs=null;
 		try {
 			File f=new File(repository+File.separator+nome);
+			
 			f.createNewFile();
 			
 			fs=new FileOutputStream(f);
@@ -524,9 +527,11 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		System.out.println(dir.list().length);
 		for(File file: dir.listFiles()) 
 			file.delete();
+	
+		
 		dir.delete();
 		
 		File f = new File(repository + File.separator  + nome);
@@ -534,7 +539,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		Hashtable t = new Hashtable<String, FileInfo>();
 		t.put(nome, i);
 		try {
-			nodeServer.fillHash();
+			//nodeServer.fillHash();
 			superNode.setNode(ip, t);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block

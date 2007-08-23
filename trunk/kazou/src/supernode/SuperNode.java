@@ -47,7 +47,6 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 		runningSearchs = new Vector();
 		superNodes = new ArrayList();
 		init(superNode);
-
 		//n = new Node(name, name, repository);
 		try {
 			n = new Node(name, repository);
@@ -55,7 +54,6 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		rand = new Random();
 	}
 		
@@ -257,10 +255,22 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 		List v = getSuperNodes();
 		List machines = new ArrayList();
 		
-		if ((List)files_hash.get(file)!= null) {
+		
+		if (files_hash!= null) {
 			//machines.addAll((Vector)nodes.get(file));
-			getNodeUI(name).addFilesInfos((List)files_hash.get(file));
+			//getNodeUI(name).addFilesInfos((List)files_hash.get(file));
+			Iterator it= files_hash.keySet().iterator();
+			if(it!=null){
+				while(it.hasNext()){
+					String aux=(String)it.next();
+					System.out.println(aux +" "+file);
+					if(aux.toLowerCase().contains(file.toLowerCase()))
+						getNodeUI(name).addFilesInfos((List)files_hash.get(aux));
+					
+				}
+			}
 		}
+		
 		for (int i=0;i < v.size();i++) {
 			String address = (String)v.get(i);
 			if (!address.equalsIgnoreCase(this.name)) {
