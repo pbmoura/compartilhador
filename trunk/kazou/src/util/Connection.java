@@ -32,6 +32,10 @@ public class Connection {
 		count = ips.size()-1;
 	}
 	
+	/**
+	 * Tenta conectar a algum supernode da lista de supernodes.
+	 * @return
+	 */
 	public String connect() {
 		try {
 			String ip;
@@ -56,9 +60,13 @@ public class Connection {
 					break;
 					
 				} catch (Exception e) {
+					e.printStackTrace();
+					
 					ip = nextIp();
+					
 					if (ip.equals(firstIP))
 						return null;
+					
 					continue;
 				}
 			}
@@ -108,38 +116,39 @@ public class Connection {
 	public void writeIpsSuperNode(List<String> list) throws IOException {
 		FileOutputStream output = new FileOutputStream(sourceFile);
 		
-		list.add(0, ips.get(count));
+		List<String> ipsAux = ips.subList(0, ips.size());
 		
-		for(String s: ips) {
+		list.add(0, ipsAux.get(count));
+		
+		for(String s: ipsAux) {
 			for(String t: list) {
 				if (s.equals(t)) {
-					ips.remove(s);
+					ipsAux.remove(s);
 					break;
 				}
 			}
 		}
 		
-		list.addAll(ips);
-		ips = list.subList(0, MAX_SIZE_LIST);
+		list.addAll(ipsAux);
+		
+		if(list.size() > 20)
+			ipsAux = list.subList(0, MAX_SIZE_LIST-1);
+		else
+			ipsAux.addAll(list);
+		
 		String aux = "";
 		
-		for (String ip : ips) {
+		for (String ip : ipsAux) {
 			aux = aux + ip + "\n";
 		}
 		
 		output.write(aux.getBytes(), 0, aux.getBytes().length);
 		output.flush();
+		output.close();
 	}
      
 	public void removeIp(String ip ){
 		ips.remove(ip);
 	}
 	
-	public static void main(String args[]) {
-		try {
-			//new Connection();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
 }
