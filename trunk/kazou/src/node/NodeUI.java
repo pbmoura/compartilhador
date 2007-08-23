@@ -62,6 +62,46 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		}
 	}
 	
+	public void continuarDownload(){
+	
+		File dir=new File(repository);
+		File[] files=dir.listFiles();
+		
+		for(int i=0;i<files.length;i++){
+			if(files[i].isDirectory()){
+				// listou as partes do arquivo que esta sendo downloadEADO
+				File[] f=files[i].listFiles();
+				
+				File f2=new File(f[i]+File.separator+"file.properties");
+				DataInputStream prop;
+				try {
+					prop = new DataInputStream(new FileInputStream(f2));
+					Properties props=new Properties();
+					props.load(prop);
+					String h=((String)props.get("hash"));
+					String nome=((String)props.get("nome"));
+					prop.close();
+					
+					download(nome,h);
+						
+						
+					
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				
+				
+			}
+		}
+	}
+	
+	
 	public List<String> getMachines() {
 		return machines;
 	}
@@ -273,8 +313,8 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 			}
 			try {
 				fs.write(("size="+size).getBytes());
-			//	fs.write(("\nhash="+hashcode).getBytes());
-			//	fs.write(("\nnome="+nome).getBytes());
+				fs.write(("\nhash="+hash).getBytes());
+				fs.write(("\nnome="+nome).getBytes());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -296,9 +336,16 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		FileOutputStream fs=null;
 		try {
 			File f=new File(repository+File.separator+diretorio+File.separator+diretorio+"."+offset);
-			//File f=new File(repository+File.separator+2+nome);
-			if (f.exists())
-				f.delete();
+			
+			if (f.exists()){
+				if(f.length()==totallength){
+					return true;
+				}else if(f.length()==(size-offset)){
+						return true;
+				}
+				else f.delete();
+			}
+				
 			f.createNewFile();
 			
 			fs=new FileOutputStream(f);
@@ -556,5 +603,11 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	public void setNodeServer(NodeServer nodeServer) {
 		this.nodeServer = nodeServer;
 	}
+
+	public String getRepository() {
+		return repository;
+	}
+
+	
 
 }
