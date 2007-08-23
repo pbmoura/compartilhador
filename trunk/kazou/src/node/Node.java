@@ -29,7 +29,11 @@ public class Node {
 		new Thread(nodeUI).start();		
 	}
 	
-	public static void init(String[] args) throws IOException {
+	public static void main(String args[]) throws IOException {
 		new Node(args[0],args[1]);
+	}
+
+	public NodeUI getNodeUI() {
+		return nodeUI;
 	}
 }

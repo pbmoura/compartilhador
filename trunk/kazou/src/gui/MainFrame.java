@@ -55,9 +55,11 @@ public class MainFrame extends JFrame {
 		return currentScreenID;
 	}
 
-	public static void showException(String exception) {
+	public static void showException(String exception, boolean exit) {
 		JOptionPane.showMessageDialog(null, exception,Constants.ERROR_LABEL, JOptionPane.ERROR_MESSAGE);
-		Controller.getInstance().exit(1);
+		if (exit){
+			Controller.getInstance().exit(1);
+		}
 	}
 
 }

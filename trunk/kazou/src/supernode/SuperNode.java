@@ -21,6 +21,9 @@ import javax.swing.JOptionPane;
 
 import node.INodeUI;
 import node.Node;
+import node.NodeUI;
+import util.Net;
+import business.Controller;
 import business.FileInfo;
 
 
@@ -39,9 +42,11 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	private Node n;
 	private Vector runningSearchs;
 	private Random rand;
-	public SuperNode (String name, String superNode, String repository) throws RemoteException {
+	public SuperNode (String superNode, String repository) throws RemoteException {
 		super();
-		this.name = name;
+		try {
+			this.name = Net.getLocalIPAddress();
+
 		files_hash = new Hashtable<String, List<FileInfo>>();
 		hash_machines = new Hashtable<String, List<String>>();
 		runningSearchs = new Vector();
@@ -55,6 +60,10 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 			e.printStackTrace();
 		}
 		rand = new Random();
+		} catch (IOException e1) {
+			Controller.getInstance().showException(e1.getMessage(),true);
+			e1.printStackTrace();
+		}
 	}
 		
 	private void init(String superNode) {
@@ -74,11 +83,11 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
     		System.err.println("SuperNode pronto...");
     		//this.addSuperNode(name);
     	} catch (java.rmi.ConnectException ce) {
-    		JOptionPane.showMessageDialog(null,"Não foi possivel conectar a //"+superNode);
+    		Controller.getInstance().showException("Não foi possivel conectar a //"+superNode,true);
     		ce.printStackTrace();
  
     	} catch(Exception e) {
-    		JOptionPane.showMessageDialog(null,"Erro desconhecido na conexão com o servidor");
+    		Controller.getInstance().showException("Erro desconhecido na conexão com o servidor",true);
     		e.printStackTrace();
     	}
     	
@@ -124,7 +133,7 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	
 	public static void main(String[] args) {
 		try {
-			new SuperNode(args[0],args[1], args[2]);
+			new SuperNode(args[0],args[1]);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -307,6 +316,10 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	public void disconnect(String name) throws RemoteException {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public NodeUI getNodeUI() {
+		return n.getNodeUI();
 	}
 
 }

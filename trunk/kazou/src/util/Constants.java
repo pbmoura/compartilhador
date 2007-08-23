@@ -62,6 +62,8 @@ public interface Constants {
         "Taxa","Tamanho","Completo"};
 	
 	/** Application Constants */
+	public static final int NODE_ARCHITECTURE =0;
+	public static final int SUPERNODE_ARCHITECTURE =1;
 
 	
 }

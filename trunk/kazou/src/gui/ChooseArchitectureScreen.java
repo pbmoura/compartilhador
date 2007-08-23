@@ -79,9 +79,9 @@ public class ChooseArchitectureScreen extends Screen implements ActionListener {
 		Object source = e.getSource();
 		if (source == btOk){
 			if (btradioNode.isSelected()==true){
-				System.out.println("node");
+				Controller.getInstance().configureArch(Constants.NODE_ARCHITECTURE);
 			}else {
-				System.out.println("supernode");
+				Controller.getInstance().configureArch(Constants.SUPERNODE_ARCHITECTURE);
 			}
 			getOwner().showScreen(Constants.SETUP_SCREEN);
 		}

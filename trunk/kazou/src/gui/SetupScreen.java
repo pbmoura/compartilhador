@@ -79,8 +79,11 @@ public class SetupScreen extends Screen implements ActionListener{
 		this.addToGridBag(tfRepAddress,1,1,1,1,0,0,GridBagConstraints.HORIZONTAL);
 		this.addToGridBag(btBrowse,2,1,1,1,0,0,GridBagConstraints.HORIZONTAL);
 
-		this.addToGridBag(tfNameLabel,0,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
-		this.addToGridBag(tfName,1,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
+		//only for super nodes
+//		if (Controller.getInstance().getArchitecture() == Constants.SUPERNODE_ARCHITECTURE){
+//			this.addToGridBag(tfNameLabel,0,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
+//			this.addToGridBag(tfName,1,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
+//		}
 
 		this.addToGridBag(tfNameServerLabel,0,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
 		this.addToGridBag(tfNameServer,1,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
@@ -101,7 +104,7 @@ public class SetupScreen extends Screen implements ActionListener{
 		Object source = ae.getSource();
 		if (source == btBrowse){
 			//Open file chooser
-			JFileChooser fileChooser = new JFileChooser();
+			JFileChooser fileChooser = new JFileChooser(tfRepAddress.getText());
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			int result = fileChooser.showDialog(this,Constants.OK_LABEL);
 			if (result == JFileChooser.APPROVE_OPTION){
@@ -109,19 +112,21 @@ public class SetupScreen extends Screen implements ActionListener{
 			}
 			
 		}else if (source == btOk){
-			//String text = tfRepAddress.getText();
+			//configure user and initiate node or supernode
+			
 			if ( (tfRepAddress.getText() != null && tfRepAddress.getText().trim().length()!=0)
 				&&(tfName.getText() != null && tfName.getText().trim().length()!=0)
 				&&(tfNameServer.getText() != null && tfNameServer.getText().trim().length()!=0)){
-				//Configure user and goto search screen
+				//Configure user 
 				UserConfig userConfig = new UserConfig(tfName.getText(), tfNameServer.getText(), tfRepAddress.getText());
 				controller.configureUser(userConfig);
-				try {
-					new Node(userConfig.getNameServer(), userConfig.getRepository());
-				} catch (IOException e) {
-					e.printStackTrace();
+				
+				//initialize node or supernode, if this is not the manager screen
+				if(getOwner().getCurrentScreenID()!= Constants.MANAGEMENT_SCREEN){
+					controller.initCommunications();
 				}
-				//Controller.configureUser(tfRepAddress.getText(),(String)cbChooseSupernode.getSelectedItem());
+				
+				//go to search screen
 				if(getOwner().getCurrentScreenID()!= Constants.MANAGEMENT_SCREEN){
 					getOwner().showScreen(Constants.MANAGEMENT_SCREEN);
 				}

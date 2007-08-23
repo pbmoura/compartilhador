@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
-
 import node.Node;
 import node.NodeUI;
 import supernode.SuperNode;
@@ -23,7 +21,7 @@ import util.Net;
 public class Controller {
 	
 	private static Controller instance = null;
-	private Properties properties = null;
+	private Properties properties =  new Properties();
 	private NodeUI nodeUI = null;
 	private MainFrame frame;
 	
@@ -38,28 +36,29 @@ public class Controller {
 		return instance;
 	}
 	
-	public void initNode(String args[]){
-		try{
-			properties = new Properties();
-			String ip = Net.getLocalIPAddress();
-			nodeUI = new NodeUI(ip,args[0],args[1]);
-			Node.init(args);			
-			initGUI();
+
+	public void initNode(String superNodeIP, String repository){
+		try{			
+			Node node = new Node(superNodeIP,repository);
+			nodeUI = node.getNodeUI();
 		}catch(IOException ioe){
-			MainFrame.showException(ioe.getMessage());
+			showException(ioe.getMessage(),true);
+			ioe.printStackTrace();
 		}
 	}
 	
-	public void initSuperNode(String args[]){
+	public void initSuperNode(String superNode, String repository){
 		try {
-			new SuperNode(args[0],args[1], args[2]);
+			SuperNode supernode = new SuperNode(superNode, repository);
+			nodeUI = supernode.getNodeUI();
+			
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
+			showException(e.getMessage(),true);
 			e.printStackTrace();
 		}	
 	}
 
-	private void initGUI(){
+	public void initGUI(){
 		this.frame = new MainFrame();
 		this.frame.showScreen(Constants.SPLASH_SCREEN);	
 	}
@@ -76,6 +75,36 @@ public class Controller {
 		System.exit(0);
 	}
 
+	/**
+	 * 
+	 * @param arch Constants.NODE_ARCHITECTURE or Constants.SUPERNODE_ARCHITECTURE
+	 */
+	public void configureArch(int arch) {
+		try {
+		
+		properties.setProperty("architecture",String.valueOf(arch));
+		properties.store(new FileOutputStream("config.properties"), null);
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }	
+	}
+	
+	/**
+	 * 
+	 * @return Constants.NODE_ARCHITECTURE or Constants.SUPERNODE_ARCHITECTURE
+	 */
+	public int getArchitecture(){
+		int arch=-1;
+		try {
+			properties.load(new FileInputStream("config.properties"));
+			arch= Integer.parseInt(properties.getProperty("architecture"));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		return arch;
+	}
+	
 	public void configureUser(UserConfig userConfig) {    
 		try {
 	        properties.setProperty("repository", userConfig.getRepository());
@@ -126,10 +155,15 @@ public class Controller {
 		try {
 			nodeUI.download(name, hash);
 		} catch (RemoteException e) {
+			showException(e.getMessage(),true);
 			e.printStackTrace();
 		} catch (FileNotFoundException fe) {
-			JOptionPane.showMessageDialog(null, "arquivo nao encontrado");
+			showException("Arquivo não encontrado",false);
 		}
+	}
+	
+	public void showException(String e,boolean exit){
+		MainFrame.showException(e,exit);
 	}
 	public Vector getCurrentDownloads() {
 		Vector v = new Vector();
@@ -138,6 +172,17 @@ public class Controller {
 		v.add(new FileInfo(new File("window_ico.png")));
 		
 		return v;
+	}
+
+	public void initCommunications() {
+		UserConfig userConfig = getUserConfig();
+		if (getArchitecture() == Constants.NODE_ARCHITECTURE){
+			initNode(userConfig.getNameServer(), userConfig.getRepository());
+		} else {
+			initSuperNode(userConfig.getNameServer(), userConfig.getRepository());
+		}
+
+		
 	}
 	
 
