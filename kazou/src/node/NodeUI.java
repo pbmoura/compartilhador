@@ -77,7 +77,8 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 				// listou as partes do arquivo que esta sendo downloadEADO
 				File[] f=files[i].listFiles();
 				
-				File f2=new File(f[i]+File.separator+"file.properties");
+				File f2=new File(files[i] +File.separator+"file.properties");
+				if (!f2.exists()) continue;
 				DataInputStream prop;
 				try {
 					prop = new DataInputStream(new FileInputStream(f2));
@@ -122,7 +123,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		connectToSuperNode(this.superNodeIP);
 		System.out.println("dependo do superno: "+this.superNodeIP);
 		insertClient();
-		//continuarDownload();
+		continuarDownload();
 		searchFile();
 	}
 	
@@ -599,7 +600,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		Hashtable t = new Hashtable<String, FileInfo>();
 		t.put(nome, i);
 		try {
-			//nodeServer.fillHash();
+			nodeServer.fillHash();
 			superNode.setNode(ip, t);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
