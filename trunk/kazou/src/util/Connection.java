@@ -65,7 +65,7 @@ public class Connection {
 					
 					ip = nextIp();
 					
-					if (ip.equals(firstIP))
+					if (ip == null || ip.equals(firstIP))
 						return null;
 					
 					continue;
