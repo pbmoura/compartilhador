@@ -28,7 +28,7 @@ public class Node {
 			throw new IOException("Nenhum supernode encontrado");
 		try {
 			nodeServer = new NodeServer(ip, repository);
-			nodeUI = new NodeUI(ip, superNode, repository);
+			nodeUI = new NodeUI(ip, superNode, repository, connection);
 			nodeUI.setNodeServer(nodeServer);
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -41,7 +41,7 @@ public class Node {
 		this.ip = Net.getLocalIPAddress();
 		try {
 			nodeServer = new NodeServer(ip, repository);
-			nodeUI = new NodeUI(ip, nameServerIP, repository);
+			nodeUI = new NodeUI(ip, nameServerIP, repository, connection);
 			nodeUI.setNodeServer(nodeServer);
 		} catch (RemoteException e) {
 			e.printStackTrace();

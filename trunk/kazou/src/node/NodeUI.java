@@ -23,6 +23,8 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import supernode.ISuperNode;
+import util.Connection;
+import business.Controller;
 import business.FileInfo;
 
 public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
@@ -36,13 +38,15 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	private List<FileInfo> filesInfos;
 	private NodeServer nodeServer;
 	private List<DownloadManager>  currentDownloads;
+	private Connection connection;
 	File folder;
 	
-	public NodeUI(String ip, String superNodeIP, String repository) throws RemoteException {
+	public NodeUI(String ip, String superNodeIP, String repository, Connection conn) throws RemoteException {
 		super();
 		this.ip = ip;
 		this.superNodeIP = superNodeIP;
 		this.repository = repository;
+		this.connection = conn;
 		this.machines = new ArrayList<String>();
 		this.filesInfos = new ArrayList<FileInfo>();
 		this.currentDownloads = new ArrayList<DownloadManager>();
@@ -199,12 +203,34 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	
 	public void search(String name) throws RemoteException {
 		filesInfos.clear();
-		superNode.searchFileByName(name, ip);
+		try {
+			superNode.searchFileByName(name, ip);
+		} catch(RemoteException e) {
+			connect();
+			superNode.searchFileByName(name, ip);
+		}
+	}
+	
+	private void connect() throws RemoteException {
+		String sn = connection.connect();
+		if (sn == null)
+			Controller.getInstance().showException("estou só...", true);
+		try {
+			superNode = (ISuperNode)Naming.lookup("//" + sn + "/supernode");
+		} catch (Exception e) {
+			throw new RemoteException();
+		}
+		
 	}
 	
 	public void download(String name, String hash) throws RemoteException, FileNotFoundException {
 		machines.clear();
-		superNode.searchFileByHash(hash, ip);
+		try {
+			superNode.searchFileByHash(hash, ip);
+		} catch(RemoteException e) {
+			connect();
+			superNode.searchFileByHash(hash, ip);
+		}
 		DownloadManager dm = new DownloadManager(this, name, hash);
 		currentDownloads.add( dm );
 		dm.download();			
