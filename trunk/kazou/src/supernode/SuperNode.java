@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import node.INodeUI;
 import node.Node;
 import node.NodeUI;
+import util.Connection;
 import util.Net;
 import business.Controller;
 import business.FileInfo;
@@ -42,7 +43,9 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	private Node n;
 	private Vector runningSearchs;
 	private Random rand;
-	public SuperNode (String superNode, String repository) throws RemoteException {
+	private Connection connection;
+	
+	public SuperNode (String repository) throws RemoteException {
 		super();
 		try {
 			this.name = Net.getLocalIPAddress();
@@ -51,7 +54,8 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 		hash_machines = new Hashtable<String, List<String>>();
 		runningSearchs = new Vector();
 		superNodes = new ArrayList();
-		init(superNode);
+		connection = new Connection(this.name);
+		init();
 		//n = new Node(name, name, repository);
 		try {
 			n = new Node(name, repository);
@@ -66,12 +70,19 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 		}
 	}
 		
-	private void init(String superNode) {
+	private void init() {
+		String superNode = null;
 		if (System.getSecurityManager() == null) {
             System.setSecurityManager(new RMISecurityManager());
         }
 		try {
-			String objname = "//"+this.name+"/supernode";
+			superNode = connection.connect();
+			if (superNode != null) {
+				sNode.addSuperNode(this.name);
+	    		this.addSuperNode(superNode);
+			}
+			
+			/*
 			if (!this.name.equals(superNode)) {
 				String supNode = "//"+superNode+"/supernode";
 	    		sNode = (ISuperNode) Naming.lookup(supNode);
@@ -79,18 +90,26 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	    		sNode.addSuperNode(this.name);
 	    		this.addSuperNode(superNode);
 			}
+			*/
+			
+			
+			String objname = "//"+this.name+"/supernode";
 			Naming.rebind(objname,this);
     		System.err.println("SuperNode pronto...");
     		//this.addSuperNode(name);
     	} catch (java.rmi.ConnectException ce) {
-    		Controller.getInstance().showException("Não foi possivel conectar a //"+superNode,true);
     		ce.printStackTrace();
+    		Controller.getInstance().showException("Não foi possivel conectar a //"+superNode,true);
  
     	} catch(Exception e) {
-    		Controller.getInstance().showException("Erro desconhecido na conexão com o servidor",true);
     		e.printStackTrace();
+    		Controller.getInstance().showException("Erro desconhecido na conexão com o servidor",true);
     	}
     	
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public void addSuperNode(String name) {
@@ -106,11 +125,11 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	/** 
 	 * Retorna uma lista com todos os supernos
 	 */
-	public List getSuperNodes() throws RemoteException{
+	public List getSuperNodes() throws RemoteException {
 		if (!superNodes.isEmpty()) {
 			return superNodes;
 		} 
-		return null;
+		return new ArrayList();
 	}
 
 	private ISuperNode connectToSuperNode (String address) {
@@ -133,7 +152,7 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 	
 	public static void main(String[] args) {
 		try {
-			new SuperNode(args[0],args[1]);
+			new SuperNode(args[0]);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
