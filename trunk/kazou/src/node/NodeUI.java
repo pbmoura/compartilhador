@@ -35,6 +35,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	private List<String> machines;
 	private List<FileInfo> filesInfos;
 	private NodeServer nodeServer;
+	private List<DownloadManager>  currentDownloads;
 	File folder;
 	
 	public NodeUI(String ip, String superNodeIP, String repository) throws RemoteException {
@@ -44,6 +45,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		this.repository = repository;
 		this.machines = new ArrayList<String>();
 		this.filesInfos = new ArrayList<FileInfo>();
+		this.currentDownloads = new ArrayList<DownloadManager>();
 		init();
 	}
 	
@@ -120,7 +122,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		connectToSuperNode(this.superNodeIP);
 		System.out.println("dependo do superno: "+this.superNodeIP);
 		insertClient();
-		continuarDownload();
+		//continuarDownload();
 		searchFile();
 	}
 	
@@ -202,10 +204,17 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 	public void download(String name, String hash) throws RemoteException, FileNotFoundException {
 		machines.clear();
 		superNode.searchFileByHash(hash, ip);
-		new DownloadManager(this, name, hash).download();
-		
-		
-		
+		DownloadManager dm = new DownloadManager(this, name, hash);
+		dm.download();
+		currentDownloads.add( dm );	
+	}
+	
+	public void downloadFinished(DownloadManager dm) {
+		currentDownloads.remove(dm);
+	}
+	
+	public List<DownloadManager> getCurrentDownloads() {
+		return currentDownloads;
 	}
 	
 	private void searchFile() {
