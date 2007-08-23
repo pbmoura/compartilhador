@@ -68,7 +68,7 @@ public class TransferScreen extends Screen implements ActionListener {
 			FileInfo fileInfo = (FileInfo) downloads.get(i);
 			
 			dtModel.addRow(new String[]{fileInfo.getFilename(),
-					String.valueOf(fileInfo.getTranferRate()),
+					/*String.valueOf(fileInfo.getTranferRate()),*/
 					String.valueOf(fileInfo.getSizeInKB()),
 					String.valueOf(fileInfo.getCompleteKB())});
 			JProgressBar jpb = new JProgressBar(0,100);
@@ -98,7 +98,7 @@ public class TransferScreen extends Screen implements ActionListener {
 	
 	class DownloadTableModel extends DefaultTableModel{
 		public DownloadTableModel(){
-			super(0,4);
+			super(0,3);
 			setColumnIdentifiers(Constants.DOWNLOAD_TABLE_HEADER);
 		}
 		public boolean isCellEditable(int rowIndex, int mColIndex){ 

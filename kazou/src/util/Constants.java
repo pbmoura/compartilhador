@@ -59,7 +59,7 @@ public interface Constants {
 	public static final String[] SEARCH_TABLE_HEADER = {"Nome do Arquivo",
             "Tamanho", "ID"};
 	public static final String[] DOWNLOAD_TABLE_HEADER = {"Nome do Arquivo",
-        "Taxa","Tamanho","Completo"};
+        /*"Taxa",*/"Tamanho","Completo"};
 	
 	/** Application Constants */
 	public static final int NODE_ARCHITECTURE =0;
