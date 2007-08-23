@@ -4,12 +4,15 @@ import gui.MainFrame;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
+
+import javax.swing.JOptionPane;
 
 import node.Node;
 import node.NodeUI;
@@ -124,6 +127,8 @@ public class Controller {
 			nodeUI.download(name, hash);
 		} catch (RemoteException e) {
 			e.printStackTrace();
+		} catch (FileNotFoundException fe) {
+			JOptionPane.showMessageDialog(null, "arquivo nao encontrado");
 		}
 	}
 	public Vector getCurrentDownloads() {
