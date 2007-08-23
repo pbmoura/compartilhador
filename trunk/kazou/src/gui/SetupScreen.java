@@ -22,7 +22,7 @@ import business.UserConfig;
 public class SetupScreen extends Screen implements ActionListener{
 	private JTextField tfRepAddress;
 //	private JTextField tfName;
-	private JTextField tfNameServer;
+//	private JTextField tfNameServer;
 	private JButton    btBrowse;
 	private JButton    btOk;
 	private JButton    btCancel;
@@ -51,12 +51,12 @@ public class SetupScreen extends Screen implements ActionListener{
 		tfRepAddress = new JTextField(10);	
 		tfRepAddress.setText(userConfig.getRepository());
 		
-		JLabel tfNameLabel = new JLabel(Constants.SETUP_SCREEN_NAME_LABEL);
+//		JLabel tfNameLabel = new JLabel(Constants.SETUP_SCREEN_NAME_LABEL);
 //		tfName = new JTextField(10);	
 //		tfName.setText(userConfig.getName());
 		
-		JLabel tfNameServerLabel = new JLabel(Constants.SETUP_SCREEN_NAME_SERVER_LABEL);
-		tfNameServer = new JTextField(10);	
+//		JLabel tfNameServerLabel = new JLabel(Constants.SETUP_SCREEN_NAME_SERVER_LABEL);
+//		tfNameServer = new JTextField(10);	
 //		tfNameServer.setText(userConfig.getNameServer());
 		
 		btBrowse     = new JButton(Constants.SETUP_SCREEN_BROWSE_LABEL);		
@@ -85,8 +85,8 @@ public class SetupScreen extends Screen implements ActionListener{
 //			this.addToGridBag(tfName,1,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
 //		}
 
-		this.addToGridBag(tfNameServerLabel,0,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
-		this.addToGridBag(tfNameServer,1,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
+//		this.addToGridBag(tfNameServerLabel,0,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
+//		this.addToGridBag(tfNameServer,1,3,1,1,0,0,GridBagConstraints.HORIZONTAL);
 		
 //		this.addToGridBag(cbLabel,0,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
 //		this.addToGridBag(cbChooseSupernode,1,2,1,1,0,0,GridBagConstraints.HORIZONTAL);
@@ -116,7 +116,8 @@ public class SetupScreen extends Screen implements ActionListener{
 			
 			if ( (tfRepAddress.getText() != null && tfRepAddress.getText().trim().length()!=0)
 //				&&(tfName.getText() != null && tfName.getText().trim().length()!=0)
-				&&(tfNameServer.getText() != null && tfNameServer.getText().trim().length()!=0)){
+//				&&(tfNameServer.getText() != null && tfNameServer.getText().trim().length()!=0)
+				){
 				//Configure user 
 				UserConfig userConfig = new UserConfig(/*tfName.getText(), tfNameServer.getText(),*/ tfRepAddress.getText());
 				controller.configureUser(userConfig);

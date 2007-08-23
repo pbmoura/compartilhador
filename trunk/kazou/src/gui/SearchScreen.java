@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -81,7 +82,7 @@ public class SearchScreen extends Screen implements ActionListener {
 		if(source == btSearch || source ==tfSearch){
 			String text=tfSearch.getText();
 			if (text !=null && text.length()!=0){
-				Vector results = Controller.getInstance().searchFile(text);
+				List<FileInfo> results = Controller.getInstance().searchFile(text);
 				//reset table				
 				fillTable(results);				
 
@@ -91,7 +92,7 @@ public class SearchScreen extends Screen implements ActionListener {
 	}
 
 	
-	private void fillTable(Vector results) {
+	private void fillTable(List<FileInfo> results) {
 		// TODO: Determine how this table is filled
 		MyTableModel tbModel =new MyTableModel();
 		tbSearch.setModel(tbModel);
