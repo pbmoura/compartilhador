@@ -22,8 +22,10 @@ public class Node {
 	public Node(String repository) throws IOException {
 		this.ip = Net.getLocalIPAddress();
 		connection = new Connection(this.ip);
-		String superNode = connection.connect();
-		this.ip = Net.getLocalIPAddress();
+		String superNode = null;
+		superNode = connection.connect();
+		if (superNode == null)
+			throw new IOException("Nenhum supernode encontrado");
 		try {
 			nodeServer = new NodeServer(ip, repository);
 			nodeUI = new NodeUI(ip, superNode, repository);
