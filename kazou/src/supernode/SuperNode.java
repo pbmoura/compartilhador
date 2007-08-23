@@ -78,7 +78,7 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 		try {
 			superNode = connection.connect();
 			if (superNode != null) {
-				sNode = (ISuperNode)Naming.lookup(superNode);
+				sNode = (ISuperNode)Naming.lookup("//" + superNode + "/supernode");
 				sNode.addSuperNode(this.name);
 	    		this.addSuperNode(superNode);
 			}
