@@ -132,24 +132,17 @@ public class Controller {
 	    return userConfig;
 	}
 
-	public Vector searchFile(String fileName) {
-		Vector v = new Vector();
+	public List<FileInfo> searchFile(String fileName) {
+		List<FileInfo> fileInfos = null;
 		try {			
 			nodeUI.search(fileName);
-			List<FileInfo> result = nodeUI.getFilesInfos();
-			for (FileInfo fileInfo : result) {
-				v.add(fileInfo);
-			}
-			
+			fileInfos = nodeUI.getFilesInfos();
+
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-	
-//		v.add(new FileInfo(new File("policy")));
-//		v.add(new FileInfo(new File("SplashImage.jpg")));
-//		v.add(new FileInfo(new File("window_ico.png")));
 		
-		return v;
+		return fileInfos;
 		
 	}
 	public void startDownload(String name, String hash) {
