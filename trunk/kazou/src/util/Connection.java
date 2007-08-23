@@ -14,6 +14,7 @@ import supernode.ISuperNode;
 import supernode.SuperNode;
 
 public class Connection {
+	
 	private LineNumberReader reader;
 	private File sourceFile;
 	private List<String> ips;
@@ -34,25 +35,30 @@ public class Connection {
 	public String connect() {
 		try {
 			String ip;
+			String firstIP;
 			
-			if (ips == null) init();
+			if (ips == null)
+				init();
 			
-			System.err.println("Entrando...");
-			int end = count==0?ips.size():count-1;
+			ip = nextIp();
+			firstIP = ip;
 			
 			while(true) {
-				if (count == end) return null;
-				ip = nextIp();
-				
+								
 				String supNode = "//" + ip + "/supernode";
 				ISuperNode sNode;
 				
 				try {
+					
 					sNode = (ISuperNode) Naming.lookup(supNode);
 					System.out.println("Conectado a " + ip);
 					writeIpsSuperNode(sNode.getSuperNodes());
 					break;
+					
 				} catch (Exception e) {
+					ip = nextIp();
+					if (ip.equals(firstIP))
+						return null;
 					continue;
 				}
 			}
@@ -67,18 +73,21 @@ public class Connection {
 	private void openFile() throws IOException {
 
 		sourceFile = new File("supernodes.list");
-		{
-			if (sourceFile.exists() && sourceFile.canRead())
-				reader = new LineNumberReader(new FileReader(sourceFile));
-			else
-				throw new IOException("File not found");
-		}
+		if (sourceFile.exists() && sourceFile.canRead())
+			reader = new LineNumberReader(new FileReader(sourceFile));
+		else
+			throw new IOException("File not found");
 	}
 
 	public String nextIp() throws IOException {
 		
 		try {
-			count = (count+1)%ips.size();
+			
+			if (count + 1 == ips.size())
+				count = 0;
+			else
+				count++;
+			
 			String ip = ips.get(count);
 			return ip;
 		} catch (Exception e) {
@@ -100,20 +109,24 @@ public class Connection {
 		FileOutputStream output = new FileOutputStream(sourceFile);
 		
 		list.add(0, ips.get(count));
-		for(String s: ips)
-			for(String t: list)
+		
+		for(String s: ips) {
+			for(String t: list) {
 				if (s.equals(t)) {
 					ips.remove(s);
 					break;
 				}
-		
+			}
+		}
 		
 		list.addAll(ips);
 		ips = list.subList(0, MAX_SIZE_LIST);
 		String aux = "";
+		
 		for (String ip : ips) {
 			aux = aux + ip + "\n";
 		}
+		
 		output.write(aux.getBytes(), 0, aux.getBytes().length);
 		output.flush();
 	}
