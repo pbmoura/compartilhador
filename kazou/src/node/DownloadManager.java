@@ -190,7 +190,7 @@ public class DownloadManager {
 	}
 
 	public long getFilesize() {
-		return filesize;
+		return filesize/1024;
 	}
 
 
