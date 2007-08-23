@@ -27,6 +27,10 @@ public class DownloadManager {
 		this.hashCode = hash;
 	}
 	
+	public String getFileName() {
+		return filename;
+	}
+	
 	public void download() throws FileNotFoundException {
 		try {
 			//for(int i=0;i<)
@@ -111,16 +115,17 @@ public class DownloadManager {
 			if (machines.isEmpty())
 				System.err.println("nao tem mais ninguem...");
 		}
-		else
+		else {
 			if (!missing.isEmpty()) {
 				downloading.add(missing.getFirst());
 				new Download(ns, missing.removeFirst()).start();
-			} else
+			} else {
 				if (downloading.isEmpty()){
 					
 					System.out.println("chamando o makefile");
 					Vector<Long> v=this.nodeUI.makeFile(this.filename);
 					if(v==null){
+						nodeUI.downloadFinished(this);
 						System.out.println("sucesso");
 					}else if(v.size()==0){
 						
@@ -140,6 +145,8 @@ public class DownloadManager {
 						
 					}// dar download novamente
 				}
+			}
+		}
 					
 		/*if (offset < filesize) {
 			new Download(ns, offSet).start();
@@ -176,6 +183,14 @@ public class DownloadManager {
 		
 		
 		
+	}
+
+	public long getCurrentsize() {
+		return missing.size() * packetLength;
+	}
+
+	public long getFilesize() {
+		return filesize;
 	}
 
 
