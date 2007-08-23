@@ -19,7 +19,7 @@ public class ManagementScreen extends Screen {
 		reset();
 		addTab(SearchScreen.getInstance(frame));		
 		addTab(TransferScreen.getInstance(frame));
-		addTab(SetupScreen.getInstance(frame));
+//		addTab(SetupScreen.getInstance(frame));
 	}
 	
 	public String getTitle() {
