@@ -57,7 +57,7 @@ public class NodeServer extends UnicastRemoteObject implements INode {
 		System.out.println("Imprimindo name..."+ip);
 		fillHash();
 		System.out.println("Carregando servidor de arquivos...");
-		new DirectoryListener().start();
+		//new DirectoryListener().start();
 		
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new RMISecurityManager());
