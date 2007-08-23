@@ -205,8 +205,8 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		machines.clear();
 		superNode.searchFileByHash(hash, ip);
 		DownloadManager dm = new DownloadManager(this, name, hash);
-		dm.download();
-		currentDownloads.add( dm );	
+		currentDownloads.add( dm );
+		dm.download();			
 	}
 	
 	public void downloadFinished(DownloadManager dm) {

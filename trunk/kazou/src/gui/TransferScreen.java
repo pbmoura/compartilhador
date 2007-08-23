@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JProgressBar;
@@ -12,11 +13,13 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
+import node.DownloadManager;
+
 import business.*;
 
 import util.Constants;
 
-public class TransferScreen extends Screen implements ActionListener {
+public class TransferScreen extends Screen implements Runnable, ActionListener {
 
 	private static TransferScreen instance;
 	private JTable downloadTable;
@@ -43,7 +46,8 @@ public class TransferScreen extends Screen implements ActionListener {
 		downloadTable.getTableHeader().setReorderingAllowed(false);
 		
 		dwnProgressBars = new Vector();
-		reset();	
+		
+		new Thread(this).start();	
 	}
 	
 	public String getTitle() {
@@ -63,18 +67,18 @@ public class TransferScreen extends Screen implements ActionListener {
 		addToGridBag(downloadTable,0,1,1,GridBagConstraints.REMAINDER,0.7,1,GridBagConstraints.BOTH);
 		
 		//Fill with the tranfers
-		Vector downloads = Controller.getInstance().getCurrentDownloads();
+		List<DownloadManager> downloads = Controller.getInstance().getCurrentDownloads();
 		for (int i=0;i<downloads.size();i++){
-			FileInfo fileInfo = (FileInfo) downloads.get(i);
+			DownloadManager dwnManager = (DownloadManager) downloads.get(i);
 			
-			dtModel.addRow(new String[]{fileInfo.getFilename(),
+			dtModel.addRow(new String[]{dwnManager.getFileName(),
 					/*String.valueOf(fileInfo.getTranferRate()),*/
-					String.valueOf(fileInfo.getSizeInKB()),
-					String.valueOf(fileInfo.getCompleteKB())});
+					String.valueOf(dwnManager.getFilesize()),
+					String.valueOf(dwnManager.getCurrentsize())});
 			JProgressBar jpb = new JProgressBar(0,100);
 			
-			double percentComplete =fileInfo.getSizeInKB()!=0 ?
-					((double)fileInfo.getCompleteKB()/(double)fileInfo.getSizeInKB()):
+			double percentComplete =dwnManager.getCurrentsize()!=0 ?
+					((double)dwnManager.getCurrentsize()/(double)dwnManager.getFilesize()):
 						0;
 					
 			jpb.setValue((int)(100* percentComplete));
@@ -94,6 +98,19 @@ public class TransferScreen extends Screen implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void run(){
+		while(true){
+			try {
+				Thread.sleep(500);
+				reset();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 	}
 	
 	class DownloadTableModel extends DefaultTableModel{
