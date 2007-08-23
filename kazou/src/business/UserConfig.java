@@ -2,7 +2,7 @@ package business;
 
 public class UserConfig {
 
-	private String name;
+//	private String name;
 	private String nameServer;
 	private String repository;
 	
@@ -10,17 +10,17 @@ public class UserConfig {
 	public UserConfig() {
 	}
 
-	public UserConfig(String name, String nameServer, String repository) {
-		this.name = name;
+	public UserConfig(/*String name, */String nameServer, String repository) {
+//		this.name = name;
 		this.nameServer = nameServer;
 		this.repository = repository;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+//	public String getName() {
+//		return name;
+//	}
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 	public String getNameServer() {
 		return nameServer;
 	}
