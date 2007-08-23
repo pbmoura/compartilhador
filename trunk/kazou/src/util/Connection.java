@@ -39,21 +39,24 @@ public class Connection {
 			
 			System.err.println("Entrando...");
 			int end = count==0?ips.size():count-1;
-			do {
+			
+			while(true) {
 				if (count == end) return null;
 				ip = nextIp();
 				
 				String supNode = "//" + ip + "/supernode";
 				ISuperNode sNode;
+				
 				try {
 					sNode = (ISuperNode) Naming.lookup(supNode);
+					System.out.println("Conectado a " + ip);
+					writeIpsSuperNode(sNode.getSuperNodes());
+					break;
 				} catch (Exception e) {
 					continue;
 				}
-				System.out.println("Conectado a " + ip);
-				writeIpsSuperNode(sNode.getSuperNodes());
-				
-			} while (false);
+			}
+			
 			return ip;
 		} catch (IOException ioe) {
 			return null;
