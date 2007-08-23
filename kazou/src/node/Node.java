@@ -9,6 +9,7 @@ package node;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
+import util.Connection;
 import util.Net;
 
 public class Node {
@@ -16,6 +17,23 @@ public class Node {
 	private String ip;
 	NodeServer nodeServer;
 	NodeUI nodeUI;
+	Connection connection;
+	
+	public Node(String repository) throws IOException {
+		this.ip = Net.getLocalIPAddress();
+		connection = new Connection(this.ip);
+		String superNode = connection.connect();
+		this.ip = Net.getLocalIPAddress();
+		try {
+			nodeServer = new NodeServer(ip, repository);
+			nodeUI = new NodeUI(ip, superNode, repository);
+			nodeUI.setNodeServer(nodeServer);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		new Thread(nodeUI).start();
+		
+	}
 	
 	public Node(String nameServerIP, String repository) throws IOException {
 		this.ip = Net.getLocalIPAddress();

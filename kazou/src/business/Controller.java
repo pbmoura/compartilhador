@@ -36,9 +36,9 @@ public class Controller {
 	}
 	
 
-	public void initNode(String superNodeIP, String repository){
+	public void initNode(String repository){
 		try{			
-			Node node = new Node(superNodeIP,repository);
+			Node node = new Node(repository);
 			nodeUI = node.getNodeUI();
 		}catch(IOException ioe){
 			showException(ioe.getMessage(),true);
@@ -46,9 +46,9 @@ public class Controller {
 		}
 	}
 	
-	public void initSuperNode(String superNode, String repository){
+	public void initSuperNode(String repository){
 		try {
-			SuperNode supernode = new SuperNode(superNode, repository);
+			SuperNode supernode = new SuperNode(repository);
 			nodeUI = supernode.getNodeUI();
 			
 		} catch (RemoteException e) {
@@ -111,7 +111,7 @@ public class Controller {
 		try {
 	        properties.setProperty("repository", userConfig.getRepository());
 //	        properties.setProperty("name", userConfig.getName());
-	        properties.setProperty("nameServer", userConfig.getNameServer());
+//	        properties.setProperty("nameServer", userConfig.getNameServer());
 			properties.store(new FileOutputStream("config.properties"), null);	        
 	    } catch (IOException e) {
 	    	e.printStackTrace();
@@ -125,7 +125,7 @@ public class Controller {
 	        userConfig = new UserConfig();
 	        userConfig.setRepository(properties.getProperty("repository"));
 //	        userConfig.setName(properties.getProperty("name"));
-	        userConfig.setNameServer(properties.getProperty("nameServer"));
+//	        userConfig.setNameServer(properties.getProperty("nameServer"));
 	    } catch (IOException e) {
 	    	e.printStackTrace();
 	    }		
@@ -179,9 +179,9 @@ public class Controller {
 	public void initCommunications() {
 		UserConfig userConfig = getUserConfig();
 		if (getArchitecture() == Constants.NODE_ARCHITECTURE){
-			initNode(userConfig.getNameServer(), userConfig.getRepository());
+			initNode(userConfig.getRepository());
 		} else {
-			initSuperNode(userConfig.getNameServer(), userConfig.getRepository());
+			initSuperNode(userConfig.getRepository());
 		}
 
 		

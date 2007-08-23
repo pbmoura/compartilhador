@@ -3,16 +3,16 @@ package business;
 public class UserConfig {
 
 //	private String name;
-	private String nameServer;
+//	private String nameServer;
 	private String repository;
 	
 	
 	public UserConfig() {
 	}
 
-	public UserConfig(/*String name, */String nameServer, String repository) {
+	public UserConfig(/*String name, String nameServer,*/ String repository) {
 //		this.name = name;
-		this.nameServer = nameServer;
+//		this.nameServer = nameServer;
 		this.repository = repository;
 	}
 //	public String getName() {
@@ -21,12 +21,12 @@ public class UserConfig {
 //	public void setName(String name) {
 //		this.name = name;
 //	}
-	public String getNameServer() {
-		return nameServer;
-	}
-	public void setNameServer(String nameServer) {
-		this.nameServer = nameServer;
-	}
+//	public String getNameServer() {
+//		return nameServer;
+//	}
+//	public void setNameServer(String nameServer) {
+//		this.nameServer = nameServer;
+//	}
 	public String getRepository() {
 		return repository;
 	}

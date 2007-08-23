@@ -12,4 +12,5 @@ public interface ISuperNode extends Remote{
 	public List searchFileByHash(String hash, String name) throws RemoteException;
 	public void disconnect(String name) throws RemoteException;
 	public void addSuperNode(String name) throws RemoteException;
+	public List<String> getSuperNodes() throws RemoteException;
 }

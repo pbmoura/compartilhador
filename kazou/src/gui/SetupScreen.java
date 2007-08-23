@@ -57,7 +57,7 @@ public class SetupScreen extends Screen implements ActionListener{
 		
 		JLabel tfNameServerLabel = new JLabel(Constants.SETUP_SCREEN_NAME_SERVER_LABEL);
 		tfNameServer = new JTextField(10);	
-		tfNameServer.setText(userConfig.getNameServer());
+//		tfNameServer.setText(userConfig.getNameServer());
 		
 		btBrowse     = new JButton(Constants.SETUP_SCREEN_BROWSE_LABEL);		
 		btOk         = new JButton(Constants.OK_LABEL);
@@ -118,7 +118,7 @@ public class SetupScreen extends Screen implements ActionListener{
 //				&&(tfName.getText() != null && tfName.getText().trim().length()!=0)
 				&&(tfNameServer.getText() != null && tfNameServer.getText().trim().length()!=0)){
 				//Configure user 
-				UserConfig userConfig = new UserConfig(/*tfName.getText(),*/ tfNameServer.getText(), tfRepAddress.getText());
+				UserConfig userConfig = new UserConfig(/*tfName.getText(), tfNameServer.getText(),*/ tfRepAddress.getText());
 				controller.configureUser(userConfig);
 				
 				//initialize node or supernode, if this is not the manager screen
@@ -153,7 +153,7 @@ public class SetupScreen extends Screen implements ActionListener{
 		UserConfig userConfig = controller.getUserConfig();
 		tfRepAddress.setText(userConfig.getRepository());
 //		tfName.setText(userConfig.getName());
-		tfNameServer.setText(userConfig.getNameServer());
+//		tfNameServer.setText(userConfig.getNameServer());
 		
 		if(getOwner().getCurrentScreenID()== Constants.MANAGEMENT_SCREEN){
 			btCancel.setVisible(false);
