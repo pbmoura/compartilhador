@@ -47,6 +47,7 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 		runningSearchs = new Vector();
 		superNodes = new ArrayList();
 		init(superNode);
+
 		//n = new Node(name, name, repository);
 		try {
 			n = new Node(name, repository);
@@ -54,6 +55,7 @@ public class SuperNode extends UnicastRemoteObject implements ISuperNode {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		rand = new Random();
 	}
 		

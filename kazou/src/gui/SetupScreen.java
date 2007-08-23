@@ -1,11 +1,21 @@
 package gui;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
-import util.*;
-import business.*;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import node.Node;
+import util.Constants;
+import business.Controller;
+import business.UserConfig;
 
 
 
@@ -106,6 +116,11 @@ public class SetupScreen extends Screen implements ActionListener{
 				//Configure user and goto search screen
 				UserConfig userConfig = new UserConfig(tfName.getText(), tfNameServer.getText(), tfRepAddress.getText());
 				controller.configureUser(userConfig);
+				try {
+					new Node(userConfig.getNameServer(), userConfig.getRepository());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				//Controller.configureUser(tfRepAddress.getText(),(String)cbChooseSupernode.getSelectedItem());
 				if(getOwner().getCurrentScreenID()!= Constants.MANAGEMENT_SCREEN){
 					getOwner().showScreen(Constants.MANAGEMENT_SCREEN);
