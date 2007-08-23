@@ -121,10 +121,11 @@ public class SearchScreen extends Screen implements ActionListener {
 				JTable table = (JTable)e.getSource();				
 				int index = table.getSelectedRow();
 				//the hash value is at column number 2
-				Object hash = table.getModel().getValueAt(index,2);
+				String hash = (String)table.getModel().getValueAt(index,2);
+				String name = (String)table.getModel().getValueAt(index,0);
 				//Start file download if not already started
 				if (hash!=null){
-					Controller.getInstance().startDownload(hash);
+					Controller.getInstance().startDownload(name, hash);
 				}
 			}
 		}
