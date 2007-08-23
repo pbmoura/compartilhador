@@ -69,8 +69,14 @@ public class DownloadManager {
 		}
 	}
 	
-	
-	public void continueDownload(long off,int size) throws FileNotFoundException {
+	/**
+	 * 
+	 * 
+	 * @param off - deslocamento
+	 * @param size - tamanho do bloco que esta faltando
+	 * @throws FileNotFoundException
+	 */
+	private void continueDownload(long off,int size) throws FileNotFoundException {
 		try {
 			offSet = off;
 			

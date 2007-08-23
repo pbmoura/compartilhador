@@ -61,7 +61,10 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * Assim que o programa eh iniciado os downloads pendentes sao reativados
+	 * 
+	 */
 	public void continuarDownload(){
 	
 		File dir=new File(repository);
@@ -117,6 +120,7 @@ public class NodeUI extends UnicastRemoteObject implements Runnable, INodeUI {
 		connectToSuperNode(this.superNodeIP);
 		System.out.println("dependo do superno: "+this.superNodeIP);
 		insertClient();
+		continuarDownload();
 		searchFile();
 	}
 	
