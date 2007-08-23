@@ -115,20 +115,26 @@ public class SearchScreen extends Screen implements ActionListener {
 	 * @author ncq
 	 *
 	 */
-	class TableDoubleClickListener extends MouseAdapter{
+	class TableDoubleClickListener extends MouseAdapter implements Runnable{
+		String name ;
+		String hash;
 		public void mouseClicked(MouseEvent e){
 			//Double click
 			if(e.getClickCount() == 2){							
 				JTable table = (JTable)e.getSource();				
 				int index = table.getSelectedRow();
 				//the hash value is at column number 2
-				String hash = (String)table.getModel().getValueAt(index,2);
-				String name = (String)table.getModel().getValueAt(index,0);
+				this.hash = (String)table.getModel().getValueAt(index,2);
+				this.name = (String)table.getModel().getValueAt(index,0);
 				//Start file download if not already started
-				if (hash!=null){
-					Controller.getInstance().startDownload(name, hash);
+				if (this.hash!=null){
+					new Thread(this).start();					
 				}
 			}
+		}
+		
+		public void run(){
+			Controller.getInstance().startDownload(this.name, this.hash);
 		}
 	}
 	
@@ -146,5 +152,7 @@ public class SearchScreen extends Screen implements ActionListener {
 	          return false; 
 	     }
 	}
+	
+		
 
 }

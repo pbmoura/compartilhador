@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
+import node.DownloadManager;
 import node.Node;
 import node.NodeUI;
 import supernode.SuperNode;
@@ -160,13 +161,9 @@ public class Controller {
 	public void showException(String e,boolean exit){
 		MainFrame.showException(e,exit);
 	}
-	public Vector getCurrentDownloads() {
-		Vector v = new Vector();
-		v.add(new FileInfo(new File("policy")));
-		v.add(new FileInfo(new File("SplashImage.jpg")));
-		v.add(new FileInfo(new File("window_ico.png")));
-		
-		return v;
+	public List<DownloadManager> getCurrentDownloads() {
+		List<DownloadManager>currentDownloads= nodeUI.getCurrentDownloads();
+		return currentDownloads;
 	}
 
 	public void initCommunications() {
