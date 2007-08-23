@@ -21,7 +21,7 @@ import business.UserConfig;
 
 public class SetupScreen extends Screen implements ActionListener{
 	private JTextField tfRepAddress;
-	private JTextField tfName;
+//	private JTextField tfName;
 	private JTextField tfNameServer;
 	private JButton    btBrowse;
 	private JButton    btOk;
@@ -52,8 +52,8 @@ public class SetupScreen extends Screen implements ActionListener{
 		tfRepAddress.setText(userConfig.getRepository());
 		
 		JLabel tfNameLabel = new JLabel(Constants.SETUP_SCREEN_NAME_LABEL);
-		tfName = new JTextField(10);	
-		tfName.setText(userConfig.getName());
+//		tfName = new JTextField(10);	
+//		tfName.setText(userConfig.getName());
 		
 		JLabel tfNameServerLabel = new JLabel(Constants.SETUP_SCREEN_NAME_SERVER_LABEL);
 		tfNameServer = new JTextField(10);	
@@ -115,10 +115,10 @@ public class SetupScreen extends Screen implements ActionListener{
 			//configure user and initiate node or supernode
 			
 			if ( (tfRepAddress.getText() != null && tfRepAddress.getText().trim().length()!=0)
-				&&(tfName.getText() != null && tfName.getText().trim().length()!=0)
+//				&&(tfName.getText() != null && tfName.getText().trim().length()!=0)
 				&&(tfNameServer.getText() != null && tfNameServer.getText().trim().length()!=0)){
 				//Configure user 
-				UserConfig userConfig = new UserConfig(tfName.getText(), tfNameServer.getText(), tfRepAddress.getText());
+				UserConfig userConfig = new UserConfig(/*tfName.getText(),*/ tfNameServer.getText(), tfRepAddress.getText());
 				controller.configureUser(userConfig);
 				
 				//initialize node or supernode, if this is not the manager screen
@@ -152,7 +152,7 @@ public class SetupScreen extends Screen implements ActionListener{
 		//Keep the user`s repositorty path
 		UserConfig userConfig = controller.getUserConfig();
 		tfRepAddress.setText(userConfig.getRepository());
-		tfName.setText(userConfig.getName());
+//		tfName.setText(userConfig.getName());
 		tfNameServer.setText(userConfig.getNameServer());
 		
 		if(getOwner().getCurrentScreenID()== Constants.MANAGEMENT_SCREEN){

@@ -63,7 +63,7 @@ public class SplashScreen extends Screen {
 			screen.getOwner().dispose();
 			screen.getOwner().setUndecorated(false);
 			
-			if (Controller.getInstance().getUserConfig().getName().length()==0){
+			if (Controller.getInstance().getArchitecture()==-1){
 				//choose architecture, for first run
 				screen.getOwner().showScreen(Constants.CHOOSEARCH_SCREEN);
 			}else {

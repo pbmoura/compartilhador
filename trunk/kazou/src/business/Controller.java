@@ -16,7 +16,6 @@ import node.Node;
 import node.NodeUI;
 import supernode.SuperNode;
 import util.Constants;
-import util.Net;
 
 public class Controller {
 	
@@ -97,7 +96,10 @@ public class Controller {
 		int arch=-1;
 		try {
 			properties.load(new FileInputStream("config.properties"));
-			arch= Integer.parseInt(properties.getProperty("architecture"));
+			String strarch = properties.getProperty("architecture");
+			if (strarch.length()!=0){
+				arch= Integer.parseInt(strarch);
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -108,7 +110,7 @@ public class Controller {
 	public void configureUser(UserConfig userConfig) {    
 		try {
 	        properties.setProperty("repository", userConfig.getRepository());
-	        properties.setProperty("name", userConfig.getName());
+//	        properties.setProperty("name", userConfig.getName());
 	        properties.setProperty("nameServer", userConfig.getNameServer());
 			properties.store(new FileOutputStream("config.properties"), null);	        
 	    } catch (IOException e) {
@@ -122,7 +124,7 @@ public class Controller {
 	        properties.load(new FileInputStream("config.properties"));
 	        userConfig = new UserConfig();
 	        userConfig.setRepository(properties.getProperty("repository"));
-	        userConfig.setName(properties.getProperty("name"));
+//	        userConfig.setName(properties.getProperty("name"));
 	        userConfig.setNameServer(properties.getProperty("nameServer"));
 	    } catch (IOException e) {
 	    	e.printStackTrace();
