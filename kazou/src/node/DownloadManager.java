@@ -1,5 +1,6 @@
 package node;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
@@ -69,6 +70,33 @@ public class DownloadManager {
 	}
 	
 	
+	public void continueDownload(long off,int size) throws FileNotFoundException {
+		try {
+			offSet = off;
+			
+			downloading = new Vector<Long>();
+			missing = new LinkedList<Long>();
+			for(long i = 0; i <size; i += packetLength)
+				missing.addFirst(i);
+			
+			machines = nodeUI.getMachines();
+			
+			for(String s: machines) {
+				INode ns = nodeUI.connectNode(s);
+				downloading.add(missing.getFirst());
+				new Download(ns, missing.removeFirst()).start();
+				offSet += packetLength;
+				if (missing.isEmpty() ) break;
+			}
+			
+		
+			
+		} catch(Exception e) {
+			//System.err.println("Erro no download: " + e.getMessage());
+			throw new FileNotFoundException();
+		}
+	}
+	
 	synchronized void completed(INode ns, long offset, boolean ok) {
 		downloading.remove(offset);
 		if (!ok) {
@@ -83,14 +111,28 @@ public class DownloadManager {
 				new Download(ns, missing.removeFirst()).start();
 			} else
 				if (downloading.isEmpty()){
-					// ANTIGO this.nodeUI.makeFile(this.filename);
+					
 					System.out.println("chamando o makefile");
 					Vector<Long> v=this.nodeUI.makeFile(this.filename);
 					if(v==null){
 						System.out.println("sucesso");
 					}else if(v.size()==0){
 						
-					}else ;// dar download novamente
+					}else {
+							long off=v.get(0);
+							long end=v.get(1);
+							int siz=(int)(end-off);
+							v.remove(0);
+							v.remove(1);
+							try {
+								this.continueDownload(off, siz);
+							} catch (FileNotFoundException e) {
+								
+								e.printStackTrace();
+							}
+						
+						
+					}// dar download novamente
 				}
 					
 		/*if (offset < filesize) {
@@ -100,10 +142,12 @@ public class DownloadManager {
 			this.nodeUI.makeFile(this.filename);*/
 	}
 	
+	
+	
 	class Download extends Thread {
 		INode node;
 		long offset;
-		
+			
 		Download(INode n, long offset) {
 			this.node = n;
 			this.offset = offset;
@@ -112,8 +156,11 @@ public class DownloadManager {
 		public void run() {
 			
 			try {
-				boolean test=nodeUI.downloadFile(filename, hashCode, offset, packetLength, node);
-				completed(node, offset, test);
+				boolean sucess;
+			
+				sucess=nodeUI.downloadFile(filename, hashCode, offset, packetLength, node);
+				
+				completed(node, offset, sucess);
 				
 				
 			} catch (RemoteException e) {
