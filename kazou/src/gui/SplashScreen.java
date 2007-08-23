@@ -67,6 +67,8 @@ public class SplashScreen extends Screen {
 				//choose architecture, for first run
 				screen.getOwner().showScreen(Constants.CHOOSEARCH_SCREEN);
 			}else {
+				//initialize node or supernode
+				Controller.getInstance().initCommunications();
 				screen.getOwner().showScreen(Constants.MANAGEMENT_SCREEN);	
 			}
 		}
