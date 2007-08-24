@@ -186,7 +186,13 @@ public class DownloadManager {
 	}
 
 	public long getCurrentsize() {
-		return (filesize - (missing.size() * packetLength))/1024;
+		
+		try {
+			return (filesize - (missing.size() * packetLength))/1024;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return 0;
 	}
 
 	public long getFilesize() {
