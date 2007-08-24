@@ -103,7 +103,7 @@ public class TransferScreen extends Screen implements Runnable, ActionListener {
 	public void run(){
 		while(true){
 			try {
-				Thread.sleep(500);
+				Thread.sleep(100);
 				reset();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
