@@ -55,7 +55,7 @@ public class Connection {
 				try {
 					
 					sNode = (ISuperNode) Naming.lookup(supNode);
-					System.out.println("Conectado a " + ip);
+//					System.out.println("Conectado a " + ip);
 					this.name = ip;
 					updateIpListFile(sNode.getSuperNodes());
 					break;
